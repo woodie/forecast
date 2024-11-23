@@ -17,3 +17,8 @@ rvm install 3.2.0 --with-openssl-dir=$(brew --prefix openssl@1.1)
 gem install rails
 rails new forecast --skip-git
 ```
+
+More rubygems added (including rspec) to Gemfile.
+```
+rails generate rspec:install
+```
