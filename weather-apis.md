@@ -37,20 +37,17 @@ Geocoder.search('Northstar Dr, Truckee, CA 96161').first.coordinates
 => [39.29167355, -120.11588443470491]
 Geocoder.search('96161,CA').first.coordinates
 => [39.3271383086758, -120.1904837041096]
-Geocoder.search('Olympic Heights,CA').first.coordinates
-=> [39.3355407, -120.1553372]
 
 Geocoder.search('Olympic Valley, CA 96146').first.coordinates
 => [39.1984156, -120.2298597]
 Geocoder.search('96146,CA').first.coordinates
 => [39.204006191860465, -120.22210241860466]
-Geocoder.search('Rampart,CA').first.coordinates
-=> [39.164629, -120.1782485]
 ```
 
 With a valid zip code, we can just ignore the rest of the address.
 
 ```rb
+require 'geocoder'
 require 'openweathermap'
 require 'dotenv'; Dotenv.load('.env')
 api = OpenWeatherMap::API.new(ENV['openweather_api_key'], 'en', 'metric')
@@ -58,10 +55,12 @@ api = OpenWeatherMap::API.new(ENV['openweather_api_key'], 'en', 'metric')
 api.current('96161,US').weather_conditions.temperature => 6.64
 api.current('96161,US').city.name => "Olympic Heights"
 api.current('96161,US').city.coordinates => @lat=39.3357, @lon=-120.1577
+Geocoder.search('Olympic Heights,CA').first.coordinates => [39.3355407, -120.1553372]
 
 api.current('96146,US').weather_conditions.temperature => 6.29
 api.current('96146,US').city.name => "Rampart"
 api.current('96146,US').city.coordinates => @lat=39.1646, @lon=-120.1782
+Geocoder.search('Rampart,CA').first.coordinates => [39.164629, -120.1782485]
 ```
 
 OpenWeatherMap geocoding from zip code appears to be associated
