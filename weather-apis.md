@@ -27,11 +27,14 @@ We can evaluate data from a couple resorts to understand granularity:
 * Palisades: 1960 Olympic Vly Rd, Olympic Valley, CA 96146
 
 We can fetch our own lat/lon data for comparison.
+We can query with lat/lon to get the postal code.
 
 ```rb
 require 'geocoder'
-Geocoder.search("Truckee,US").first.coordinates
-=> [39.327962, -120.1832533]
+Geocoder.search("Truckee,US").first.postal_code
+=> nil
+Geocoder.search(Geocoder.search("Truckee,US").first.coordinates).first.postal_code
+=> "96161"
 
 Geocoder.search('Northstar Dr, Truckee, CA 96161').first.coordinates
 => [39.29167355, -120.11588443470491]
@@ -42,8 +45,14 @@ Geocoder.search('Olympic Valley, CA 96146').first.coordinates
 => [39.1984156, -120.2298597]
 Geocoder.search('96146,CA').first.coordinates
 => [39.204006191860465, -120.22210241860466]
+
+Geocoder.search("50122,US").first.display_name
+=> "50122, Hubbard, Hardin County, Iowa, United States"
+Geocoder.search("50122,IT").first.display_name
+=> "50122, Quartiere 1, Florence, Tuscany, Italy"
 ```
 
+To avoid collisions, we should including postal and country code as cache keys.
 With a valid zip code, we can just ignore the rest of the address.
 
 ```rb
@@ -94,17 +103,5 @@ api.current('99999,US')
 => unknown location. API message : 99999,US (OpenWeatherMap::Exceptions::UnknownLocation)
 ```
 
-The geocoder is a bit aggressive/creative when converting a nonsense address.
-UnknownLocation exceptions from OpenWeatherMap can be treated as a bad zip code.
-
-```rb
-require 'Indirizzo'
-Indirizzo::Address.new("").zip => no text provided (ArgumentError)
-Indirizzo::Address.new("1").zip => ""
-Indirizzo::Address.new("Truckee CA").zip => ""
-Indirizzo::Address.new("9999,US").zip => ""
-Indirizzo::Address.new("99999-1234,US").zip => "99999"
-Indirizzo::Address.new("99999, Morgan County, Ohio, United States").zip => "99999"
-```
-
-We can use an existing library to reliably extract zip codes, once we have at least 5 characters.
+The geocoder can be aggressive/creative when converting a nonsense address.
+UnknownLocation exceptions from OpenWeatherMap can be treated as a bad postal/country code.
