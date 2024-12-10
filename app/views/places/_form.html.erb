@@ -1,0 +1,62 @@
+<%= form_with(model: place) do |form| %>
+  <% if place.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(place.errors.count, "error") %> prohibited this place from being saved:</h2>
+
+      <ul>
+        <% place.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :city, style: "display: block" %>
+    <%= form.text_field :city %>
+  </div>
+
+  <div>
+    <%= form.label :state, style: "display: block" %>
+    <%= form.text_field :state %>
+  </div>
+
+  <div>
+    <%= form.label :country, style: "display: block" %>
+    <%= form.text_field :country %>
+  </div>
+
+  <div>
+    <%= form.label :country_code, style: "display: block" %>
+    <%= form.text_field :country_code %>
+  </div>
+
+  <div>
+    <%= form.label :postal_code, style: "display: block" %>
+    <%= form.text_field :postal_code %>
+  </div>
+
+  <div>
+    <%= form.label :lat, style: "display: block" %>
+    <%= form.text_field :lat %>
+  </div>
+
+  <div>
+    <%= form.label :lon, style: "display: block" %>
+    <%= form.text_field :lon %>
+  </div>
+
+  <div>
+    <%= form.label :current_weather, style: "display: block" %>
+    <%= form.text_field :current_weather %>
+  </div>
+
+  <div>
+    <%= form.label :weather_forecast, style: "display: block" %>
+    <%= form.text_field :weather_forecast %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
