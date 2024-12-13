@@ -8,3 +8,37 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+body { font-family: 'Open Sans'; background-color: azure; }
+h1 { font-size: 14pt; }
+
+#main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+#search_address { width: 20em; }
+#result {
+  padding: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: white;
+  border: thin solid white;
+}
+#result:hover { border: thin solid lightgray; }
+#place { font-weight: 700; text-align: center; }
+img.weather-icon { width 0.8em; height: 0.8em; cursor:pointer }
+#current-weather { text-align: center; }
+.weather-main { font-size: 42pt; font-weight: 300 }
+.weather-time { font-size: 10pt; color: gray; text-align: center; }
+#weather-forecast {
+  font-size: 12pt;
+  margin-top: 10pt;
+  img { margin: 0 5px; }
+  table { margin: 0 auto; }
+  .forecast-temp { text-align: right; }
+}
+#disclaimer {font-size: 9pt; text-align: center; margin-top: 20px; }

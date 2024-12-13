@@ -1,0 +1,11 @@
+<% content_for :title, "Search" %>
+
+<div id="main">
+  <h1>Address for weather forecast</h1>
+
+  <%= form_for :search do |form| %>
+    <%= form.text_field :address %>
+  <% end %>
+
+  <p style="color: green"><%= notice %></p>
+</div>

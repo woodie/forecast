@@ -29,7 +29,6 @@ Will use the most current version of Rails with Geocoder and OpenWeatherApi ruby
 ### UI considerations
 
 Use HTML5/CSS and ERB with some JS to keep things simple.
-Baseline UI from OpenWeather as creative input (see baseline-ui.png).
 Highlight temperature as it was the core element requested, as well as
 rendering the main attribute (clouds, drizzle, snow) icon/emoji.
 To meet the forecast requirement, we can simply show information for tomorrow.
@@ -39,6 +38,8 @@ To meet the forecast requirement, we can simply show information for tomorrow.
 - Show icon, temp in °F with max/min after
 - Repeat the same information for tomorrow forecast
 - Display in localtime for current and tomorrow forecast
+
+We should use [better icons](https://github.com/hasankoroglu/OpenWeatherMap-Icons).
 
 ### Example UI
 
