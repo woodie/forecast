@@ -41,7 +41,7 @@ gem "thruster", require: false
 # gem "image_processing", "~> 1.2"
 
 gem "geocoder"
-gem "open-weather-api"
+gem "open-weather-api", "0.0.7" # which with monkey patch
 gem "heat-index"
 gem "pry"
 

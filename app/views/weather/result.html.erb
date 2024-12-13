@@ -1,0 +1,53 @@
+<p style="color: green"><%= notice %></p>
+
+<div id="main">
+  <div id="result">
+
+    <div id="place">
+      <%= @place.city %>, <%= @place.state %><br/>
+      <%= @place.postal_code %>, <%= @place.country %>
+    </div>
+
+    <div id="current-weather">
+      <div class="weather-main">
+        <%= icon_url @place.current_weather['weather'].first['icon'],
+                     @place.current_weather["weather"].first["description"] %>
+        <%= temp_format @place.current_weather['main']['temp'], @place.country_code %>
+
+      </div>
+      <div>Feels Like: <%= temp_format @place.current_weather["main"]["feels_like"], @place.country_code %></div>
+      <div>
+        H: <%= temp_format @place.current_weather["main"]["temp_max"], @place.country_code %> &nbsp;
+        L: <%= temp_format @place.current_weather["main"]["temp_min"], @place.country_code %>
+      </div>
+      <div class="weather-time">
+         Weather data from <%= time_format @place.current_weather["dt"], @place.current_weather["timezone"] %>
+        <% if @from_cache %>
+          <br/>Next refresh at 
+          <%= time_format (@place.updated_at + 30.minutes).to_i, @place.current_weather["timezone"] %>
+        <% end %>
+      </div>
+    </div>
+
+    <div id="weather-forecast">
+      <% @place.weather_forecast["list"].first(5).each do |item| %>
+        <div class="forecast-item">
+          <%= time_format item["dt"], @place.current_weather["timezone"] %>
+          <%= icon_url item['weather'].first['icon'],
+                       item["weather"].first["description"] %>
+          <%= temp_format item['main']['temp'], @place.country_code %>
+        <div>
+      <% end %>
+      <hr/>
+      <% @place.weather_forecast["list"].values_at(*(1...40).step(8)).each do |item| %>
+        <div class="forecast-item">
+          <%= time_format item["dt"], @place.current_weather["timezone"], "%A" %>
+          <%= icon_url item['weather'].first['icon'],
+                       item["weather"].first["description"] %>
+          <%= temp_format item['main']['temp'], @place.country_code %>
+        <div>
+      <% end %>
+    </div>
+ 
+  </div>
+</div>

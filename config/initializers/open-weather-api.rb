@@ -3,6 +3,8 @@ OpenWeatherAPI.configure do |config|
   config.default_country_code = 'us'
 end
 
+__END__
+
 class Float
   def to_celsius # from Kelvin
     (self - 273.15).round(2)

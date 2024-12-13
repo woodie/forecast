@@ -370,7 +370,7 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   kamal
-  open-weather-api
+  open-weather-api (= 0.0.7)
   propshaft
   pry
   puma (>= 5.0)
