@@ -16,49 +16,50 @@ Will use postal and country codes as the identifier to avoid "zip code" collisio
 ### Implementation
 
 Will use the most current version of Rails with Geocoder and OpenWeatherApi rubygems.
-
 - The Place controller will process the transactions
-- Raise InvalidAddress exception when Geocoder returns a null place
-- Fetch `current_weather` and `weather_forecast` independently
-- Raise WeatherUnavailable exception if OpenWeatherAPI fails
+- Handle exception when Geocoder returns a null place
+- Fetch `current_weather` and `weather_forecast` in Place model.
+- Handle when exception when OpenWeatherAPI fails
 - Cache each weather objects for 30 minutes and provide indicator
-- Will need database index on `country_code` and `postal_code`
-- Entering a new address will reset the UI.
+
+In the futurem we can...
+- Add database index on `country_code` and `postal_code`
 - Tests can mock APIs with webmock (instead of vcr)
 
 ### UI considerations
 
 Use HTML5/CSS and ERB with some JS to keep things simple.
-Highlight temperature as it was the core element requested, as well as
-rendering the main attribute (clouds, drizzle, snow) icon/emoji.
-To meet the forecast requirement, we can simply show information for tomorrow.
+Highlight temperature as it was the core element requested.
 
 - Show date/time and 'next refresh' information as indicator
 - Show the name of the place including postal and country codes
-- Show icon, temp in °F with max/min after
-- Repeat the same information for tomorrow forecast
-- Display in localtime for current and tomorrow forecast
+- Show icon, temp in °F (or °C) with max/min after
+- Repeat the same forecast information.
+- Display in localtime for current and forecast data.
 
-We should use [better icons](https://github.com/hasankoroglu/OpenWeatherMap-Icons).
+We will use [better icons](https://github.com/hasankoroglu/OpenWeatherMap-Icons).
 
 ### Example UI
 
 ```
 .---------------------.
-|                     |
 |  City, ZIP, COUNTY  |
 |     <icon> 57°F     |
 |   Feels Like: 62°   |
 |     H:66° L:43°     |
 | time & next refresh |
 |                     |
-|    8am <icon> 57°   |
-|   11am <icon> 60°   |
-|    2pm <icon> 63°   |
-|    5pm <icon> 60°   |
-|    8pm <icon> 57°   |
-|   11pm <icon> 50°   |
-|                     |
+|  8am <icon> 57°-66° |
+| 11am <icon> 55°-63° |
+|  2pm <icon> 62°-64° |
+|  5pm <icon> 57°-66° |
+|  8pm <icon> 55°-63° |
+|    5-DAY FORECAST   |
+| Thursday <icon> 57° |
+| Friday   <icon> 56° |
+| Saturday <icon> 55° |
+| Sunday   <icon> 54° |
+| Monday   <icon> 53° |
 '---------------------'
 ```
 

@@ -17,7 +17,7 @@ class Place < ApplicationRecord
     begin
       weather_data = ow_api.current(zipcode: postal_code, country_code: country_code)
     rescue RestClient::NotFound
-      # Fall back to lat/lon when postal codes are unknown
+      # Fall back to lat/lon when postal code is unknown
       weather_data = ow_api.current(lat: lat, lon: lon)
     end
     update(lat: weather_data[:coord][:lat]) if lat != weather_data[:coord][:lat]

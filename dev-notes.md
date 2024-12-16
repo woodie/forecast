@@ -6,6 +6,8 @@ We can capture development setup and code-generation here.
 
 We can generate the app to get started.
 ```sh
+rails new forecast --skip-git
+
 rails generate rspec:install
 cat > config/initializers/generators.rb<< EOF 
 Rails.application.config.generators do |g| 
@@ -18,6 +20,7 @@ rails g scaffold Place city state country country_code postal_code \
 rails g scaffold Address query place:references
 rails g controller weather
 ```
+See how controllers/specs should work in Rails8.
 
 Countries (with postal codes) exclusively using Fahrenheit:
 - us: The United States
