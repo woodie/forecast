@@ -27,6 +27,24 @@ rails s
 ```sh
 rspec spec -fd
 
+WeatherHelper
+  #icon_url
+    returns populated IMG tag
+  #time_format
+    with West Coast location
+      returns formated string
+    with East Coast location
+      returns formated string
+  #temp_format
+    with fahrenheit country
+      returns formated string
+    with celsius country
+      returns formated string
+  #to_celsius
+    returns converted float
+  #to_fahrenheit
+    returns converted float
+
 Place
   .geo_create
     uses result attributes

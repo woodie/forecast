@@ -33,7 +33,7 @@ class WeatherController < ApplicationController
     begin
       @fresh_data = @place.refresh_weather
     rescue => err
-      Rails.logger = Logger.new("OpenWeatherAPI responded with: #{err}")
+      # Rails.logger = Logger.new("OpenWeatherAPI responded with: #{err}")
       flash[:notice] = "Sorry, weather service cannot process request."
       redirect_to root_path
     end
