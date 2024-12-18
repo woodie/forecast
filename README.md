@@ -68,15 +68,16 @@ Weather
   POST /
     with too few characters of input
       redirects to search page with flash message
-    with unknown/invalid address
-      redirects to search page with flash message
-    with no postal code at address
-      redirects to search page with flash message
-    with valid postal address
-      with bad openweather API key
+    with geocoder processing addresses
+      with unknown/invalid address
         redirects to search page with flash message
-      with valid configuration
-        redirects to the result page
+      with no postal code at address
+        redirects to search page with flash message
+      with valid postal address
+        with bad openweather API key
+          redirects to search page with flash message
+        with current weather and forcast data
+          renders the result page
 
 WeatherController
   routing
