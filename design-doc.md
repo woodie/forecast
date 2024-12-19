@@ -26,7 +26,6 @@ Will use the most current version of Rails with Geocoder and OpenWeatherApi ruby
 
 In the future we can...
 - Factory for creating place and weather data would be helpful
-- Add database index on `country_code` and `postal_code`
 
 ### UI considerations
 
