@@ -16,16 +16,13 @@ Will use postal and country codes as the identifier to avoid "zip code" collisio
 ### Implementation
 
 Will use the most current version of Rails with Geocoder and OpenWeatherApi rubygems.
-- The Place controller will process the transactions
+- The Weather controller will process the transactions
 - Handle exception when Geocoder returns a null place
 - Fetch `current_weather` and `weather_forecast` in Place model
 - Handle when exception when OpenWeatherAPI fails
 - Cache each weather objects for 30 minutes and provide indicator
 - Tests could mock APIs with webmock (instead of vcr),
   but that ended up more clumsy that manually mocking
-
-In the future we can...
-- Factory for creating place and weather data would be helpful
 
 ### UI considerations
 
