@@ -48,28 +48,13 @@ RSpec.describe Place, type: :model do
   end
 
   describe "#refresh_weather" do
-    let(:lat) { 40.1234 }
-    let(:lon) { -120.1234 }
+    let(:place) { build(:place, current_weather: current, weather_forecast: forecast, updated_at: updated_at) }
     let(:cz) { {country_code: "us", zipcode: "96161"} }
-    let(:ll) { {lat: lat, lon: lon} }
-    let(:weather_data) { {coord: {lat: lat.to_s, lon: lon.to_s}} }
-    let(:forecast_data) { {"list" => []} }
-    let(:place) {
-      described_class.new(
-        city: "Truckee",
-        state: "California",
-        country: "United States",
-        country_code: "us",
-        postal_code: "96161",
-        lat: lat,
-        lon: lon,
-        current_weather: weather_data,
-        weather_forecast: forecast_data,
-        updated_at: updated_at
-      )
-    }
+    let(:ll) { {:lat=>39.3385, :lon=>-120.1729} }
+    let(:current) { {coord: {lat: ll[:lat].to_s, lon: ll[:lon].to_s}} }
+    let(:forecast) { {"list" => []} }
 
-    before { allow(place).to receive_message_chain(:ow_api, :forecast).and_return(forecast_data) }
+    before { allow(place).to receive_message_chain(:ow_api, :forecast).and_return(forecast) }
 
     subject { place.refresh_weather }
 
@@ -83,7 +68,7 @@ RSpec.describe Place, type: :model do
     context "when weather data is stale" do
       let(:updated_at) { DateTime.now.utc - 1.hour }
       it "should return true" do
-        expect(place).to receive_message_chain(:ow_api, :current).with(cz).and_return(weather_data)
+        expect(place).to receive_message_chain(:ow_api, :current).with(cz).and_return(current)
         expect(subject).to be true
       end
 
@@ -91,7 +76,7 @@ RSpec.describe Place, type: :model do
         let(:updated_at) { DateTime.now.utc - 1.hour }
         it "should still return true" do
           allow(place).to receive_message_chain(:ow_api, :current).with(cz).and_raise(RestClient::NotFound)
-          expect(place).to receive_message_chain(:ow_api, :current).with(ll).and_return(weather_data)
+          expect(place).to receive_message_chain(:ow_api, :current).with(ll).and_return(current)
           expect(subject).to be true
         end
       end

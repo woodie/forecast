@@ -60,28 +60,7 @@ RSpec.describe "Weather", type: :request do
         end
 
         context "with current weather and forcast data" do
-          let(:lat) { 40.1234 }
-          let(:lon) { -120.1234 }
-          let(:weather_data) do
-            {coord: {lat: lat.to_s, lon: lon.to_s},
-             weather: [{icon: '12c'}], dt: 1732656764, timezone: -28800,
-             main: {temp: 50, feels_like: 49, temp_min: 48, temp_max: 51}}
-          end
-          let(:forecast_data) { {"list" => Array.new(40) { weather_data }} }
-          let(:place) {
-            Place.new(
-              city: "Truckee",
-              state: "California",
-              country: "United States",
-              country_code: "us",
-              postal_code: "96161",
-              lat: lat,
-              lon: lon,
-              current_weather: weather_data,
-              weather_forecast: forecast_data,
-              updated_at: DateTime.now.utc
-            )
-          }
+          let(:place) { build(:populated_place) }
           before { allow(Place).to receive(:geo_create).and_return(place) }
 
           it "renders the result page" do
