@@ -82,4 +82,12 @@ RSpec.describe Place, type: :model do
       end
     end
   end
+
+  describe "#ow_api" do
+    let(:place) { build(:place) }
+    it "provides open weather api" do
+      expect(Rails).to receive_message_chain(:configuration, :open_weather_api)
+      place.send(:ow_api)
+    end
+  end
 end
