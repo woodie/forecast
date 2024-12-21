@@ -38,11 +38,4 @@ class WeatherController < ApplicationController
       redirect_to root_path
     end
   end
-
-  private
-
-  # Only allow a list of trusted parameters through.
-  def address_params
-    params.expect(:query)
-  end
 end

@@ -60,7 +60,7 @@ RSpec.describe "Weather", type: :request do
         end
 
         context "with current weather and forcast data" do
-          before { allow(Place).to receive(:geo_create).and_return(build(:populated_place)) }
+          before { create(:address) }
           it "renders the result page" do
             post root_url, params: {"search[address]": "Truckee, CA"}
             expect(flash[:notice]).to be_nil
