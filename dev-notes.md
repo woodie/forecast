@@ -33,3 +33,8 @@ t = Time.at(1733966196).localtime(-18000) => 2024-12-11 20:16:36 -0500
 # California
 t = Time.at(1733966196).localtime(-28800) => 2024-12-11 17:16:36 -0800 
 ```
+
+Resetting the database greatly simplifies debugging schema.
+```sh
+rails db:migrate:reset
+```

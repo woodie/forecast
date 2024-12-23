@@ -16,13 +16,14 @@ Will use postal and country codes as the identifier to avoid "zip code" collisio
 ### Implementation
 
 Will use the most current version of Rails with Geocoder and OpenWeatherApi rubygems.
+- Will work with any address the geocoder can process
 - The Weather controller will process the transactions
 - Handle exception when Geocoder returns a null place
 - Fetch `current_weather` and `weather_forecast` in Place model
 - Handle when exception when OpenWeatherAPI fails
 - Cache each weather objects for 30 minutes and provide indicator
 - Tests could mock APIs with webmock (instead of vcr),
-  but that ended up more clumsy that manually mocking
+  but that ended up more clumsy than manually mocking
 
 ### UI considerations
 
@@ -35,6 +36,11 @@ Highlight temperature as it was the core element requested.
 - Repeat the same forecast information.
 - Display in localtime for current and forecast data.
 
+Things to consider in the future:
+- Provide a way to flip between °F/°C in JS
+- Render the Place but put bckground the Weather API
+  and update the page when the data is available.
+
 We will use [better icons](https://github.com/hasankoroglu/OpenWeatherMap-Icons).
 
 ### Example UI
@@ -45,7 +51,8 @@ We will use [better icons](https://github.com/hasankoroglu/OpenWeatherMap-Icons)
 |     <icon> 57°F     |
 |   Feels Like: 62°   |
 |     H:66° L:43°     |
-| time & next refresh |
+| Weather data from T |
+|  Next refresh at T  | <= cache indicator
 |                     |
 |  8am <icon> 57°-66° |
 | 11am <icon> 55°-63° |
@@ -64,7 +71,7 @@ We will use [better icons](https://github.com/hasankoroglu/OpenWeatherMap-Icons)
 ### App schema
 
 The Place will include attributes from the Geocoder API and
-reference the current weather and forecasts will reference Place.
+reference the current weather and forecasts.
 Once we create a place, it should not require continuous updating.
 We will cache current and forecast data from the API.
 
