@@ -14,13 +14,14 @@ Rails.application.config.generators do |g|
   g.test_framework :rspec
 end
 EOF
-
+```
+See how controllers/specs should work in Rails8.
+```sh
 rails g scaffold Place city state country country_code postal_code \
     lat:float lon:float current_weather:json weather_forecast:json
 rails g scaffold Address query place:references
 rails g controller weather
 ```
-See how controllers/specs should work in Rails8.
 
 Countries (with postal codes) exclusively using Fahrenheit:
 - us: The United States
@@ -32,4 +33,9 @@ Localtime can be extracted from the open-weather-api:
 t = Time.at(1733966196).localtime(-18000) => 2024-12-11 20:16:36 -0500 
 # California
 t = Time.at(1733966196).localtime(-28800) => 2024-12-11 17:16:36 -0800 
+```
+
+Resetting the database greatly simplifies debugging schema.
+```sh
+rails db:migrate:reset
 ```
