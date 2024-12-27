@@ -41,6 +41,7 @@ gem "thruster", require: false
 # gem "image_processing", "~> 1.2"
 
 gem "geocoder"
+gem 'tenkit'
 gem "open-weather-api"
 gem "heat-index"
 gem "pry"

@@ -119,6 +119,9 @@ GEM
     http-accept (1.7.0)
     http-cookie (1.0.7)
       domain_name (~> 0.5)
+    httparty (0.21.0)
+      mini_mime (>= 1.0.0)
+      multi_xml (>= 0.5.2)
     i18n (1.14.6)
       concurrent-ruby (~> 1.0)
     importmap-rails (2.0.3)
@@ -133,6 +136,7 @@ GEM
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
     json (2.8.2)
+    jwt (2.7.1)
     kamal (2.3.0)
       activesupport (>= 7.0)
       base64 (~> 0.2)
@@ -163,6 +167,8 @@ GEM
     mini_mime (1.1.5)
     minitest (5.25.2)
     msgpack (1.7.5)
+    multi_xml (0.7.1)
+      bigdecimal (~> 3.1)
     net-imap (0.5.1)
       date
       net-protocol
@@ -345,6 +351,9 @@ GEM
     stringio (3.1.2)
     strong_migrations (2.1.0)
       activerecord (>= 6.1)
+    tenkit (0.0.5)
+      httparty (~> 0.21.0)
+      jwt (~> 2.7.0)
     thor (1.3.2)
     thruster (0.1.9-aarch64-linux)
     thruster (0.1.9-arm64-darwin)
@@ -400,6 +409,7 @@ DEPENDENCIES
   sqlite3 (>= 2.1)
   stimulus-rails
   strong_migrations
+  tenkit
   thruster
   turbo-rails
   tzinfo-data

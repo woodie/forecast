@@ -1,12 +1,29 @@
 # Forecast
 Weather forecast for a given address.
 
+We use [Geocoder API](geocoder-api.md) to convert an address to a place.
+We currently use [Open Weather API](open-weather-api.md) but we are
+also evaluating [Apple Weather API](apple-weather-api.md).
+
 ### Setup and configuration
 
-Requested an [API key](https://home.openweathermap.org/api_keys) and store the value.
+Requested some credentials.
+- [Open Weather API key](https://home.openweathermap.org/api_keys) (primary)
+- [Several IDs and a PKEY](https://github.com/superbasicxyz/tenkit) for tenkit (in progress)
+
 ```sh
 cat.env
-openweather_api_key=0123456789abcdef0123456789abcdef
+
+OPENWEATHER_API_KEY=0123456789abcdef0123456789abcdef
+APPLE_DEVELOPER_TEAM_ID=A1A1A1A1A1
+APPLE_DEVELOPER_SERVICE_ID=com.mydomain.myapp
+APPLE_DEVELOPER_KEY_ID=B2B2B2B2B2
+APPLE_DEVELOPER_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----
+0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+01234567
+-----END PRIVATE KEY-----"
 ```
 
 ### Installing software
