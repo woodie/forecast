@@ -6,12 +6,7 @@ We will cache the forecast by zip (postal) code.
 
 ### TenKit library
 
-The TenKit library handles configuration but is not complete.
-We could instead generate a JWT (using your private key and the Service ID)
-and then talk diretly to the JSON API passing the encoded JWT as a Bearer Token.
-```
-https://weatherkit.apple.com/api/v1/weather/en/{lat}/{lon}?dataSets=forecastDaily&timezone=America/Los_Angeles
-```
+The TenKit library handles configuration and authentication but is incomplete.
 
 ### Timezone for a location
 
@@ -32,6 +27,7 @@ Timezone['Asia/Tokyo'].utc_offset => 32400
 
 dt = DateTime.parse("2024-12-28T03:20:45Z").to_i
 Time.at(dt).localtime(-28800).strftime("%-l:%M%P") => "7:20pm"
+Time.at(dt).in_time_zone('America/Los_Angeles').strftime("%-l:%M%P") => "7:20pm"
 ```
 Now that we're doing this extra work to get the timezone,
 we can use that instead of offset which will be more accurate
@@ -39,9 +35,13 @@ when displaying hourly forcast while coming in and out of DST.
 
 ### Weather icons
 
-We can find/use some WeatherKit compatible icons named with
+We can use some WeatherKit compatible icons named with
 [condition code](https://github.com/hrbrmstr/weatherkit/blob/batman/R/enumerations.R)
 and provide a mapping from [open weather icon](https://openweathermap.org/weather-conditions) codes.
+Or create our own mapping from WeatherKit to a library like
+[this](https://erikflowers.github.io/weather-icons/api-list.html).
+
+![icons](https://camo.githubusercontent.com/685bc5c7307ae21265819ba60ad1bf5cee72f74534696c926414db7e6a62e3b6/687474703a2f2f692e696d6775722e636f6d2f586d5a573271332e706e67)
 
 ### Sample data
 
