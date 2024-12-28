@@ -53,6 +53,7 @@ Tenkit.configure do |c|
   c.key =  ENV["APPLE_DEVELOPER_PRIVATE_KEY"]
 end
 
+# tenkit-0.0.5/lib/tenkit/client.rb
 module Tenkit
   class Client
     def weather(lat, lon, data_sets = [:current_weather], language = 'en') # patch required
@@ -63,6 +64,7 @@ module Tenkit
     end
   end
 end
+# tenkit-0.0.5/lib/tenkit/day_weather_conditions.rb initializer also broken
 
 client = Tenkit::Client.new
 lat = 39.32812335
@@ -71,19 +73,30 @@ sets = [:current_weather, :forecast_daily, :forecast_hourly]
 
 data = client.weather(lat, lon, sets)
 
+# with patched gem
+data.weather.current_weather.metadata.latitude => 39.33
+data.weather.current_weather.metadata.longitude => -120.18
+data.weather.current_weather.as_of => "2024-12-28T11:06:03Z"
+DateTime.parse(data.weather.current_weather.as_of).to_i => 1735383963
+data.weather.current_weather.temperature => 1.84
+data.weather.current_weather.temperature_apparent => -3.3
+data.weather.current_weather.condition_code => "Cloudy"
+data.weather.current_weather.daylight => false
+data.weather.forecast_daily.days.size => 9
+data.weather.forecast_daily.days.first.forecast_start => "2024-12-28T08:00:00Z"
+data.weather.forecast_daily.days.first.temperature_min => 1.32
+data.weather.forecast_daily.days.first.temperature_max => 6.38
+
+data.raw['forecastDaily']['days'].first['restOfDayForecast']['forecastStart'] => "2024-12-28T11:06:03Z"
+data.raw['forecastDaily']['days'].first['restOfDayForecast']['temperatureMin'] => 1.84
+data.raw['forecastDaily']['days'].first['restOfDayForecast']['temperatureMax'] => 6.38
+data.raw['forecastDaily']['days'].first['restOfDayForecast']['conditionCode'] => "Drizzle"
+
 data.weather.forecast_hourly.hours.size => 243
 data.weather.forecast_hourly.hours.first["forecastStart"] => "2024-12-27T07:00:00Z"
 data.weather.forecast_hourly.hours.first['temperature'] => -0.63
 data.weather.forecast_hourly.hours.last["forecastStart"] => "2025-01-06T09:00:00Z"
 data.weather.forecast_hourly.hours.last['temperature'] => -4.14
-
-data.weather.forecast_daily.days.size => 9
-data.raw["forecastDaily"]["days"].first["forecastStart"] => "2024-12-27T08:00:00Z"
-data.raw["forecastDaily"]["days"].first["temperatureMin"] => -0.95
-data.raw["forecastDaily"]["days"].first["temperatureMax"] => 4.84
-data.raw["forecastDaily"]["days"].last["forecastStart"] => "2025-01-04T08:00:00Z"
-data.raw["forecastDaily"]["days"].last["temperatureMin"] => -1.28
-data.raw["forecastDaily"]["days"].last["temperatureMax"] => 7.09
 
 # With bogus credentials
 client.weather(lat, lon).as_json

@@ -78,6 +78,8 @@ Place
       should return true
       when postal code not found
         should still return true
+  #condition_code
+    returns open weather codes
   #ow_api
     provides open weather api
 

@@ -83,6 +83,16 @@ RSpec.describe Place, type: :model do
     end
   end
 
+  describe "#condition_icon" do
+    let(:place) { build(:place) }
+    it "returns open weather icon" do
+      expect(place.send(:condition_icon, Place::WK2OW.keys.first)).to eq "01d"
+      expect(place.send(:condition_icon, Place::WK2OW.keys.first, false)).to eq "01n"
+      expect(place.send(:condition_icon, Place::WK2OW.keys.last)).to eq "09d"
+      expect(place.send(:condition_icon, Place::WK2OW.keys.last, false)).to eq "09n"
+    end
+  end
+
   describe "#ow_api" do
     let(:place) { build(:place) }
     it "provides open weather api" do
