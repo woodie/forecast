@@ -1,9 +1,9 @@
-# Forecast
-Weather forecast for a given address.
+# Weather Forecast
+Display the weather forecast for any location.
 
 We use [Geocoder API](geocoder-api.md) to convert an address to a place.
 We currently use [Open Weather API](open-weather-api.md) but we are
-also evaluating [Apple Weather API](apple-weather-api.md).
+also evaluating [Apple WeatherKit API](apple-weather-api.md).
 
 ### Setup and configuration
 
@@ -13,8 +13,8 @@ Requested some credentials.
 
 ```sh
 cat.env
-
 OPENWEATHER_API_KEY=0123456789abcdef0123456789abcdef
+
 APPLE_DEVELOPER_TEAM_ID=A1A1A1A1A1
 APPLE_DEVELOPER_SERVICE_ID=com.mydomain.myapp
 APPLE_DEVELOPER_KEY_ID=B2B2B2B2B2

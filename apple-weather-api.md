@@ -1,4 +1,4 @@
-# Apple Weather API
+# Apple WeatherKit API
 
 We will retrieve current temperature for the given address,
 as well as high/low and extended forecast.
@@ -13,12 +13,35 @@ and then talk diretly to the JSON API passing the encoded JWT as a Bearer Token.
 https://weatherkit.apple.com/api/v1/weather/en/{lat}/{lon}?dataSets=forecastDaily&timezone=America/Los_Angeles
 ```
 
-We can work with both weather APIs interchangeably but use the same minimal format
-or we can provide an ERB template for each data source.
+### Timezone for a location
 
-We can convert [condition code](https://github.com/hrbrmstr/weatherkit/blob/batman/R/enumerations.R)
-into the identifier for [open weather icons](https://openweathermap.org/weather-conditions)
-or provide a conversion the other direction.
+We show local weather information for any location,
+but WeatherKit does not provide the TZ offset (as does OpenWeather).
+We can use `timezone_finder` to get a TZ for any lat/lon without an API call.
+If we decide to use an offset, we can get that from the `timezone` gem.
+
+```rb
+tf = TimezoneFinder.create
+
+lat, lon = [39.3385, -120.1729] # Truckee
+tf.timezone_at(lat: lat, lng: lon) => "America/Los_Angeles"
+Timezone['America/Los_Angeles'].utc_offset => -28800
+lat, lon = [35.021, 135.7556] # Kyoto
+tf.timezone_at(lat: lat, lng: lon) => "Asia/Tokyo"
+Timezone['Asia/Tokyo'].utc_offset => 32400
+
+dt = DateTime.parse("2024-12-28T03:20:45Z").to_i
+Time.at(dt).localtime(-28800).strftime("%-l:%M%P") => "7:20pm"
+```
+Now that we're doing this extra work to get the timezone,
+we can use that instead of offset which will be more accurate
+when displaying hourly forcast while coming in and out of DST.
+
+### Weather icons
+
+We can find/use some WeatherKit compatible icons named with
+[condition code](https://github.com/hrbrmstr/weatherkit/blob/batman/R/enumerations.R)
+and provide a mapping from [open weather icon](https://openweathermap.org/weather-conditions) codes.
 
 ### Sample data
 
@@ -62,8 +85,7 @@ data.raw["forecastDaily"]["days"].last["forecastStart"] => "2025-01-04T08:00:00Z
 data.raw["forecastDaily"]["days"].last["temperatureMin"] => -1.28
 data.raw["forecastDaily"]["days"].last["temperatureMax"] => 7.09
 
-# With bugus credentials
-
+# With bogus credentials
 client.weather(lat, lon).as_json
 {"raw"=>{"reason"=>"NOT_ENABLED"},
  "weather"=>
@@ -71,7 +93,6 @@ client.weather(lat, lon).as_json
    "forecast_next_hour"=>{}, "weather_alerts"=>{}}}
 
 # With proper credentials
-
 client.weather(lat, lon, sets).as_json
  =>
 {"raw"=>
@@ -163,37 +184,8 @@ client.weather(lat, lon, sets).as_json
           "windSpeed"=>11.4,
           "windSpeedMax"=>15.52},
         "overnightForecast"=>
-         {"forecastStart"=>"2024-12-27T03:00:00Z",
-          "forecastEnd"=>"2024-12-27T15:00:00Z",
-          "cloudCover"=>0.93,
-          "conditionCode"=>"HeavySnow",
-          "humidity"=>0.89,
-          "precipitationAmount"=>12.25,
-          "precipitationChance"=>1.0,
-          "precipitationType"=>"snow",
-          "snowfallAmount"=>101.92,
-          "temperatureMax"=>2.01,
-          "temperatureMin"=>-0.94,
-          "windDirection"=>219,
-          "windGustSpeedMax"=>71.95,
-          "windSpeed"=>18.31,
-          "windSpeedMax"=>25.06},
-        "restOfDayForecast"=>
-         {"forecastStart"=>"2024-12-27T07:44:39Z",
-          "forecastEnd"=>"2024-12-27T08:00:00Z",
-          "cloudCover"=>0.96,
-          "conditionCode"=>"HeavySnow",
-          "humidity"=>0.88,
-          "precipitationAmount"=>0.44,
-          "precipitationChance"=>0.33,
-          "precipitationType"=>"snow",
-          "snowfallAmount"=>4.54,
-          "temperatureMax"=>-0.89,
-          "temperatureMin"=>-0.94,
-          "windDirection"=>204,
-          "windGustSpeedMax"=>52.32,
-          "windSpeed"=>19.94,
-          "windSpeedMax"=>20.27}},
+         {"forecastStart"=>"2024-12-27T03:00:00Z", ... },
+         {"forecastStart"=>"2024-12-27T07:44:39Z", ... },
        {"forecastStart"=>"2024-12-27T08:00:00Z", ... },
        {"forecastStart"=>"2024-12-28T08:00:00Z", ... },
        ...
@@ -288,8 +280,10 @@ client.weather(lat, lon, sets).as_json
         "sunset_nautical"=>nil,
         "temperature_max"=>nil,
         "temperature_min"=>nil},
-       {"condition_code"=>nil, "sunrise"=>"2024-12-27T15:19:44Z", ... },
-       {"condition_code"=>nil, "sunrise"=>"2024-12-28T15:20:00Z", ... },
+       {"condition_code"=>nil,
+        "sunrise"=>"2024-12-27T15:19:44Z", ... },
+       {"condition_code"=>nil,
+        "sunrise"=>"2024-12-28T15:20:00Z", ... },
        ...
      "learn_more_url"=>nil},
      "learn_more_url"=>nil},
