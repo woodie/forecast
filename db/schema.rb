@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_19_160730) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_28_194800) do
   create_table "addresses", force: :cascade do |t|
     t.string "query"
     t.integer "place_id", null: false
@@ -31,6 +31,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_19_160730) do
     t.json "weather_forecast"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "timezone"
     t.index ["postal_code", "country_code"], name: "index_places_on_postal_code_and_country_code"
   end
 

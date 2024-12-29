@@ -4,8 +4,8 @@ module WeatherHelper
   end
 
   # Can do more with localtime format
-  def time_format(datetime, offset = -28800, fmt = "%-l:%M%P")
-    Time.at(datetime).localtime(offset).strftime(fmt)
+  def time_format(datetime, timezone = 'America/Los_Angeles', fmt = "%-l:%M%P")
+    Time.at(datetime).in_time_zone(timezone).strftime(fmt)
   end
 
   # Few countries are exclusively using Fahrenheit

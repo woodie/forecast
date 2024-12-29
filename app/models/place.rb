@@ -16,6 +16,7 @@ class Place < ApplicationRecord
       place.country = geo.country
       place.lat = geo.latitude
       place.lon = geo.longitude
+      place.timezone = TimezoneFinder.create.timezone_at(lat: geo.latitude.to_f, lng: geo.longitude.to_f)
     end
   end
 
@@ -23,14 +24,8 @@ class Place < ApplicationRecord
     return false if updated_at > Time.now - 30.minutes &&
       current_weather.present? && weather_forecast.present?
 
-    begin
-      weather_data = ow_api.current(zipcode: postal_code, country_code: country_code)
-    rescue RestClient::NotFound
-      # Fall back to lat/lon when postal code is unknown
-      weather_data = ow_api.current(lat: lat, lon: lon)
-    end
-    update(lat: weather_data[:coord][:lat]) if lat != weather_data[:coord][:lat]
-    update(lon: weather_data[:coord][:lon]) if lon != weather_data[:coord][:lon]
+    weather_data = ow_api.current(lat: lat, lon: lon)
+    # weather_data = legacy_payload wk_api.weather(lat, lon, [:current_weather, :forecast_daily]).raw
     update(current_weather: weather_data)
 
     forecast_data = ow_api.forecast(lat: lat, lon: lon)
@@ -40,19 +35,34 @@ class Place < ApplicationRecord
 
   private
 
-  def convert_payload # TODO
-    {weather: [{icon: '03d', description: 'Cloudy'}],
-     main: {temp: 274.99, feels_like: 269.85,
-            temp_min: 274.47, temp_max: 279.53},
-     dt: 1735383963, timezone: -28800}
+  def legacy_payload(raw)
+    cw = raw["currentWeather"]
+    df = raw["forecastDaily"]["days"].first["restOfDayForecast"]
+    code = cw["conditionCode"]
+    {coord: {lon: cw["metadata"]["longitude"], lat: cw["metadata"]["latitude"]},
+     dt: DateTime.parse(cw["asOf"]).to_i, weather: [
+       {main: code, description: code.downcase, icon: icon(code, cw["daylight"])}
+     ], main: {
+       temp: m2k(cw["temperature"]), feels_like: m2k(cw["temperatureApparent"]),
+       temp_min: m2k(df["temperatureMin"]), temp_max: m2k(df["temperatureMax"]),
+       pressure: cw["pressure"], humidity: cw["humidity"], visibility: cw["visibility"]
+     }}
   end
 
-  def condition_icon(condition, daylight = true)
-    num = WK2OW[condition.to_sym].to_s # TODO: handle zero
+  def icon(condition, daylight = true)
+    num = WK2OW[condition.to_sym].to_s
     "#{num.rjust(2, "0")}#{daylight ? "d" : "n"}"
+  end
+
+  def m2k(m)
+    (m + 273.15).round(2)
   end
 
   def ow_api
     @ow_api || @ow_api = Rails.configuration.open_weather_api
+  end
+
+  def wk_api
+    @wk_api || @wk_api = Tenkit::Client.new
   end
 end

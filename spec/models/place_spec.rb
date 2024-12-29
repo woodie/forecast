@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Place, type: :model do
+  let(:place) { build(:place) }
+
   describe ".geo_create" do
     let(:state) { nil }
     let(:district) { nil }
@@ -49,9 +51,8 @@ RSpec.describe Place, type: :model do
 
   describe "#refresh_weather" do
     let(:place) { build(:place, current_weather: current, weather_forecast: forecast, updated_at: updated_at) }
-    let(:cz) { {country_code: "us", zipcode: "96161"} }
-    let(:ll) { {:lat=>39.3385, :lon=>-120.1729} }
-    let(:current) { {coord: {lat: ll[:lat].to_s, lon: ll[:lon].to_s}} }
+    let(:coords) { {lat: 39.3385, lon: -120.1729} }
+    let(:current) { {coord: {lat: coords[:lat].to_s, lon: coords[:lon].to_s}} }
     let(:forecast) { {"list" => []} }
 
     before { allow(place).to receive_message_chain(:ow_api, :forecast).and_return(forecast) }
@@ -68,36 +69,61 @@ RSpec.describe Place, type: :model do
     context "when weather data is stale" do
       let(:updated_at) { DateTime.now.utc - 1.hour }
       it "should return true" do
-        expect(place).to receive_message_chain(:ow_api, :current).with(cz).and_return(current)
+        expect(place).to receive_message_chain(:ow_api, :current).with(coords).and_return(current)
         expect(subject).to be true
-      end
-
-      context "when postal code not found" do
-        let(:updated_at) { DateTime.now.utc - 1.hour }
-        it "should still return true" do
-          allow(place).to receive_message_chain(:ow_api, :current).with(cz).and_raise(RestClient::NotFound)
-          expect(place).to receive_message_chain(:ow_api, :current).with(ll).and_return(current)
-          expect(subject).to be true
-        end
       end
     end
   end
 
-  describe "#condition_icon" do
-    let(:place) { build(:place) }
-    it "returns open weather icon" do
-      expect(place.send(:condition_icon, Place::WK2OW.keys.first)).to eq "01d"
-      expect(place.send(:condition_icon, Place::WK2OW.keys.first, false)).to eq "01n"
-      expect(place.send(:condition_icon, Place::WK2OW.keys.last)).to eq "09d"
-      expect(place.send(:condition_icon, Place::WK2OW.keys.last, false)).to eq "09n"
+  describe "#legacy_payload" do
+    let(:wk_raw) do
+      {"currentWeather" => {
+        "metadata" => {"longitude" => -120.18, "latitude" => 39.33},
+        "asOf" => "2024-12-28T11:06:03Z", "temperature" => 1.84,
+        "temperatureApparent" => -3.3, "conditionCode" => "Cloudy", "daylight" => false,
+        "pressure" => 1013.46, "humidity" => 0.88, "visibility" => 1662.17
+      }, "forecastDaily" => {"days" => [
+        {"restOfDayForecast" => {"temperatureMin" => 1.32, "temperatureMax" => 6.38}}
+      ]}}
+    end
+    let(:payload) do
+      {coord: {lat: 39.33, lon: -120.18}, dt: 1735383963,
+       main: {feels_like: 269.85, humidity: 0.88, pressure: 1013.46,
+              temp: 274.99, temp_max: 279.53, temp_min: 274.47, visibility: 1662.17},
+       weather: [{description: "cloudy", icon: "03n", main: "Cloudy"}]}
+    end
+
+    it "returns Open Weather payload" do
+      expect(place.send(:legacy_payload, wk_raw)).to match payload
+    end
+  end
+
+  describe "#icon" do
+    it "returns Open Weather icon" do
+      expect(place.send(:icon, Place::WK2OW.keys.first)).to eq "01d"
+      expect(place.send(:icon, Place::WK2OW.keys.first, false)).to eq "01n"
+      expect(place.send(:icon, Place::WK2OW.keys.last)).to eq "09d"
+      expect(place.send(:icon, Place::WK2OW.keys.last, false)).to eq "09n"
+    end
+  end
+
+  describe "#m2k" do
+    it "converts metric to kelvin" do
+      expect(place.send(:m2k, 0.0)).to be 273.15
     end
   end
 
   describe "#ow_api" do
-    let(:place) { build(:place) }
-    it "provides open weather api" do
+    it "provides Open Weather api" do
       expect(Rails).to receive_message_chain(:configuration, :open_weather_api)
       place.send(:ow_api)
+    end
+  end
+
+  describe "#wk_api" do
+    it "provides Apple WeatherKit api" do
+      expect(Tenkit::Client).to receive(:new)
+      place.send(:wk_api)
     end
   end
 end

@@ -12,14 +12,14 @@ RSpec.describe WeatherHelper, type: :helper do
   describe "#time_format" do
     let(:datetime) { 1732656764 }
     context "with West Coast location" do
-      let(:timezone) { -28800 }
+      let(:timezone) { 'America/Los_Angeles' }
       it "returns formated string" do
         expect(helper.time_format(datetime, timezone)).to eq "1:32pm"
       end
     end
 
     context "with East Coast location" do
-      let(:timezone) { -18000 }
+      let(:timezone) { 'America/New_York' }
       it "returns formated string" do
         expect(helper.time_format(datetime, timezone)).to eq "4:32pm"
       end
