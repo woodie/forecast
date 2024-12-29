@@ -2,14 +2,19 @@
 Display the weather forecast for any location.
 
 We use [Geocoder API](geocoder-api.md) to convert an address to a place.
-We currently use [Open Weather API](open-weather-api.md) but we are
-also evaluating [Apple WeatherKit API](apple-weather-api.md).
+
+We use [Open Weather API](open-weather-api.md) but can now also
+use [Apple WeatherKit API](apple-weather-api.md).
+
+- Open Weather (free) forcast only provides a snapshot every three hours.
+- Apple WeatherKit hourly provides temperature and daily provides min/max.
+  This is opposite from what the initial implementation renders.
 
 ### Setup and configuration
 
-Requested some credentials.
-- [Open Weather API key](https://home.openweathermap.org/api_keys) (primary)
-- [Several IDs and a PKEY](https://github.com/superbasicxyz/tenkit) for tenkit (in progress)
+Request some credentials.
+- [Open Weather API key](https://home.openweathermap.org/api_keys)
+- [Several IDs and a PKEY](https://github.com/superbasicxyz/tenkit)
 
 ```sh
 cat.env

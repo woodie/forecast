@@ -1,6 +1,6 @@
 <p style="color: green"><%= notice %></p>
 
-<div id="main">
+<div id='main'>
   <div id="result" onClick="window.history.go(-1);">
 
     <div id="place">
@@ -11,17 +11,17 @@
     <div id="current-weather">
       <div class="weather-main">
         <%= icon_url @place.current_weather['weather'].first['icon'],
-                     @place.current_weather["weather"].first["description"] %>
+                     @place.current_weather['weather'].first['main'] %>
         <%= temp_format @place.current_weather['main']['temp'], @place.country_code %>
 
       </div>
-      <div>Feels Like: <%= temp_format @place.current_weather["main"]["feels_like"], @place.country_code %></div>
+      <div>Feels Like: <%= temp_format @place.current_weather['main']['feels_like'], @place.country_code %></div>
       <div>
-        H: <%= temp_format @place.current_weather["main"]["temp_max"], @place.country_code %> &nbsp;
-        L: <%= temp_format @place.current_weather["main"]["temp_min"], @place.country_code %>
+        H: <%= temp_format @place.current_weather['main']['temp_max'], @place.country_code %> &nbsp;
+        L: <%= temp_format @place.current_weather['main']['temp_min'], @place.country_code %>
       </div>
       <div class="weather-time">
-         Weather data from <%= time_format @place.current_weather["dt"], @place.timezone %>
+         Weather data from <%= time_format @place.current_weather['dt'], @place.timezone %>
         <% unless @fresh_data %>
           <br/>Next refresh at
           <%= time_format (@place.updated_at + 30.minutes).to_i, @place.timezone %>
@@ -32,11 +32,11 @@
     <div id="weather-forecast">
       <table>
         <tbody>
-        <% @place.weather_forecast["list"].first(5).each do |item| %>
+        <% @place.weather_forecast['list'].first(5).each do |item| %>
           <tr class="forecast-item">
-            <td><%= time_format item["dt"], @place.timezone, "%-l%P" %></td>
+            <td><%= time_format item['dt'], @place.timezone, "%-l%P" %></td>
             <td><%= icon_url item['weather'].first['icon'],
-                             item["weather"].first["description"] %></td>
+                             item['weather'].first['main'] %></td>
             <td calss="forecast-temp">
               <%= temp_format item['main']['temp_min'], @place.country_code %> &ndash;
               <%= temp_format item['main']['temp_max'], @place.country_code %>
@@ -48,11 +48,11 @@
       <div class="weather-time">5-DAY FORECAST</div>
       <table>
         <tbody>
-        <% @place.weather_forecast["list"].values_at(*(1...40).step(8)).each do |item| %>
+        <% @place.weather_forecast['list'].values_at(*(1...40).step(8)).each do |item| %>
           <tr class="forecast-item">
-            <td><%= time_format item["dt"], @place.timezone, "%A" %></td>
+            <td><%= time_format item['dt'], @place.timezone, "%A" %></td>
             <td><%= icon_url item['weather'].first['icon'],
-                             item["weather"].first["description"] %></td>
+                             item['weather'].first['main'] %></td>
             <td class="forecast-temp"><%= temp_format item['main']['temp'], @place.country_code %></td>
           </tr>
         <% end %>
