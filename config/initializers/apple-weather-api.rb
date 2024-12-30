@@ -7,11 +7,12 @@ end
 
 module Tenkit
   class Client
-    def weather(lat, lon, data_sets = [:current_weather], language = "en") # patch required
-      path_root = "/weather/#{language}/#{lat}/#{lon}?dataSets="
-      path = path_root + data_sets.map { |ds| DATA_SETS[ds] }.compact.join(",")
-      response = get(path)
-      WeatherResponse.new(response)
+    def current(opt)
+      get("/weather/en/#{opt[:lat]}/#{opt[:lon]}?dataSets=currentWeather,forecastDaily")
+    end
+
+    def forecast(opt)
+      get("/weather/en/#{opt[:lat]}/#{opt[:lon]}?dataSets=forecastHourly,forecastDaily")
     end
   end
 end

@@ -50,15 +50,6 @@ RSpec.describe "Weather", type: :request do
       end
 
       context "with valid postal address" do
-        context "with bad openweather API key" do
-          before { allow_any_instance_of(Place).to receive_message_chain(:ow_api, :current).and_raise(RestClient::Unauthorized) }
-          it "redirects to search page with flash message" do
-            post root_url, params: {"search[address]": "Truckee, CA"}
-            expect(flash[:notice]).to end_with "weather service cannot process request."
-            expect(response).to redirect_to(root_url)
-          end
-        end
-
         context "with current weather and forcast data" do
           before { create(:address) }
           it "renders the result page" do

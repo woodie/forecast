@@ -2,6 +2,16 @@ require "rails_helper"
 
 RSpec.describe Place, type: :model do
   let(:place) { build(:place) }
+  let(:wk_obj) do
+    {"currentWeather" => {
+      "metadata" => {"longitude" => -120.18, "latitude" => 39.33},
+      "asOf" => "2024-12-28T11:06:03Z", "temperature" => 1.84,
+      "temperatureApparent" => -3.3, "conditionCode" => "Cloudy", "daylight" => false,
+      "pressure" => 1013.46, "humidity" => 0.88, "visibility" => 1662.17
+    }, "forecastDaily" => {"days" => [
+      {"restOfDayForecast" => {"temperatureMin" => 1.32, "temperatureMax" => 6.38}}
+    ]}}
+  end
 
   describe ".geo_create" do
     let(:state) { nil }
@@ -68,24 +78,26 @@ RSpec.describe Place, type: :model do
 
     context "when weather data is stale" do
       let(:updated_at) { DateTime.now.utc - 1.hour }
-      it "should return true" do
-        expect(place).to receive_message_chain(:ow_api, :current).with(coords).and_return(current)
-        expect(subject).to be true
+
+      context "when @use_wk_api is false" do
+        before { place.use_wk_api = false }
+        it "should return true" do
+          expect(place).to receive_message_chain(:ow_api, :current).with(coords).and_return(current)
+          expect(subject).to be true
+        end
+      end
+
+      context "when use_wk_api is true" do
+        before { place.use_wk_api = true }
+        it "should return true" do
+          expect(place).to receive_message_chain(:wk_api, :current).with(coords).and_return(wk_obj)
+          expect(subject).to be true
+        end
       end
     end
   end
 
-  describe "#legacy_payload" do
-    let(:wk_raw) do
-      {"currentWeather" => {
-        "metadata" => {"longitude" => -120.18, "latitude" => 39.33},
-        "asOf" => "2024-12-28T11:06:03Z", "temperature" => 1.84,
-        "temperatureApparent" => -3.3, "conditionCode" => "Cloudy", "daylight" => false,
-        "pressure" => 1013.46, "humidity" => 0.88, "visibility" => 1662.17
-      }, "forecastDaily" => {"days" => [
-        {"restOfDayForecast" => {"temperatureMin" => 1.32, "temperatureMax" => 6.38}}
-      ]}}
-    end
+  describe "#legacy_weather" do
     let(:payload) do
       {coord: {lat: 39.33, lon: -120.18}, dt: 1735383963,
        main: {feels_like: 269.85, humidity: 0.88, pressure: 1013.46,
@@ -94,7 +106,7 @@ RSpec.describe Place, type: :model do
     end
 
     it "returns Open Weather payload" do
-      expect(place.send(:legacy_payload, wk_raw)).to match payload
+      expect(place.send(:legacy_weather, wk_obj)).to match payload
     end
   end
 

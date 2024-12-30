@@ -49,6 +49,12 @@ rails s
 ```sh
 rspec spec -fd
 
+Tenkin::Client
+  #current
+    passes currentWeather & forecastDaily
+  #forecast
+    passes forecastHourly & forecastDaily
+
 WeatherHelper
   #icon_url
     returns populated IMG tag
@@ -80,13 +86,20 @@ Place
     when weather data is fresh
       should return false
     when weather data is stale
-      should return true
-      when postal code not found
-        should still return true
-  #condition_code
-    returns open weather codes
+      when @use_wk_api false
+        should return true
+      when @legacy_api true
+        should return true
+  #legacy_weather
+    returns Open Weather payload
+  #icon
+    returns Open Weather icon
+  #m2k
+    converts metric to kelvin
   #ow_api
-    provides open weather api
+    provides Open Weather api
+  #wk_api
+    provides Apple WeatherKit api
 
 Weather
   GET /

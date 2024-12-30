@@ -1,4 +1,6 @@
 class Place < ApplicationRecord
+  attr_writer :use_wk_api
+
   WK2OW = {Clear: 1, Cloudy: 3, Dust: 50, Fog: 50, Haze: 50, MostlyClear: 1,
            MostlyCloudy: 3, PartlyCloudy: 3, ScatteredThunderstorms: 11, Smoke: 50,
            Breezy: 50, Windy: 50, Drizzle: 10, HeavyRain: 10, Rain: 10, Showers: 10,
@@ -8,6 +10,11 @@ class Place < ApplicationRecord
            Blizzard: 13, BlowingSnow: 13, FreezingDrizzle: 10, FreezingRain: 10,
            Frigid: 13, Hail: 10, Hot: 1, Hurricane: 50, IsolatedThunderstorms: 11,
            SevereThunderstorm: 11, Thunderstorm: 11, Tornado: 50, TropicalStorm: 9}
+
+  def initialize(params)
+    super
+    @use_wk_api = true
+  end
 
   def self.geo_create(geo)
     find_or_create_by(postal_code: geo.postal_code, country_code: geo.country_code) do |place|
@@ -24,8 +31,8 @@ class Place < ApplicationRecord
     return false if updated_at > Time.now - 30.minutes &&
       current_weather.present? && weather_forecast.present?
 
-    weather_data = ow_api.current(lat: lat, lon: lon)
-    # weather_data = legacy_payload wk_api.weather(lat, lon, [:current_weather, :forecast_daily]).raw
+    weather_data = (!@use_wk_api) ? ow_api.current(lat: lat, lon: lon) :
+                     legacy_weather(wk_api.current(lat: lat, lon: lon))
     update(current_weather: weather_data)
 
     forecast_data = ow_api.forecast(lat: lat, lon: lon)
@@ -35,13 +42,13 @@ class Place < ApplicationRecord
 
   private
 
-  def legacy_payload(raw)
-    cw = raw["currentWeather"]
-    df = raw["forecastDaily"]["days"].first["restOfDayForecast"]
+  def legacy_weather(obj)
+    cw = obj["currentWeather"]
+    df = obj["forecastDaily"]["days"].first["restOfDayForecast"]
     code = cw["conditionCode"]
     {coord: {lon: cw["metadata"]["longitude"], lat: cw["metadata"]["latitude"]},
      dt: DateTime.parse(cw["asOf"]).to_i, weather: [
-       {main: code, description: code.downcase, icon: icon(code, cw["daylight"])}
+       {main: code, description: code.underscore.humanize.downcase, icon: icon(code, cw["daylight"])}
      ], main: {
        temp: m2k(cw["temperature"]), feels_like: m2k(cw["temperatureApparent"]),
        temp_min: m2k(df["temperatureMin"]), temp_max: m2k(df["temperatureMax"]),
