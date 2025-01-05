@@ -42,3 +42,10 @@ img.weather-icon { width 0.8em; height: 0.8em; cursor:pointer }
   .forecast-temp { text-align: right; }
 }
 #disclaimer {font-size: 9pt; text-align: center; margin-top: 20px; }
+.bigger {
+  padding: 8px;
+  text-align: center;
+  font-size: 24pt;
+}
+.select { border: 2px solid Blue; }
+.bypass { color: Gray; }

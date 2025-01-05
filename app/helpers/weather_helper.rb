@@ -1,10 +1,16 @@
 module WeatherHelper
   def icon_url(code, alt = "icon")
-    image_tag "/ow/#{code}@2x.png", alt: alt, title: alt, class: "weather-icon"
+    image_tag "https://openweathermap.org/img/wn/#{code}@2x.png",
+        alt: alt, title: alt, class: "weather-icon"
+  end
+
+  def icon_css(id, code = "")
+    return "wi wi-owm-#{id}" if Place::NEUTRAL.include?(id)
+    "wi wi-owm-#{code.end_with?('d') ? :day : :night}-#{id}"
   end
 
   # Can do more with localtime format
-  def time_format(datetime, timezone = 'America/Los_Angeles', fmt = "%-l:%M%P")
+  def time_format(datetime, timezone = "America/Los_Angeles", fmt = "%-l:%M%P")
     Time.at(datetime).in_time_zone(timezone).strftime(fmt)
   end
 

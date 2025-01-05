@@ -3,7 +3,8 @@ require "rails_helper"
 RSpec.describe WeatherHelper, type: :helper do
   describe "#icon_url" do
     let(:code) { "13d" }
-    let(:tag) { '<img alt="icon" title="icon" class="weather-icon" src="/ow/13d@2x.png" />' }
+    let(:src) { "https://openweathermap.org/img/wn/13d@2x.png" }
+    let(:tag) { "<img alt=\"icon\" title=\"icon\" class=\"weather-icon\" src=\"#{src}\" />" }
     it "returns populated IMG tag" do
       expect(helper.icon_url(code)).to eq tag
     end
@@ -12,14 +13,14 @@ RSpec.describe WeatherHelper, type: :helper do
   describe "#time_format" do
     let(:datetime) { 1732656764 }
     context "with West Coast location" do
-      let(:timezone) { 'America/Los_Angeles' }
+      let(:timezone) { "America/Los_Angeles" }
       it "returns formated string" do
         expect(helper.time_format(datetime, timezone)).to eq "1:32pm"
       end
     end
 
     context "with East Coast location" do
-      let(:timezone) { 'America/New_York' }
+      let(:timezone) { "America/New_York" }
       it "returns formated string" do
         expect(helper.time_format(datetime, timezone)).to eq "4:32pm"
       end

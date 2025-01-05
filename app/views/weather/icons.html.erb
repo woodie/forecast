@@ -1,0 +1,22 @@
+<p style="color: green"><%= notice %></p>
+  <div id='main'>
+    <div id="weather-forecast">
+      <table>
+        <tbody>
+        <% Place::ICON_ID.each do |condition, code| %>
+          <tr class="forecast-item">
+            <% options = ['select', 'bypass'] %>
+            <% css = Place::NEUTRAL.include?(code) ? options : options.reverse %>
+            <td><%= code %>&nbsp;</td>
+            <td class="bigger <%= css.last %>"><i class='wi wi-owm-day-<%= code %>'></i></td>
+            <td class="bigger <%= css.last %>"><i class='wi wi-owm-night-<%= code %>'></i></td>
+            <td class="bigger <%= css.first %>"><i class='wi wi-owm-<%= code %>'></i></td>
+            <td>&nbsp;<%= condition %></td>
+            </td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

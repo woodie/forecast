@@ -10,11 +10,11 @@
 
     <div id="current-weather">
       <div class="weather-main">
-        <%= icon_url @place.current_weather['weather'].first['icon'],
-                     @place.current_weather['weather'].first['main'] %>
+        <i class="<%= icon_css @place.current_weather['weather'].first['id'],
+                               @place.current_weather['weather'].first['icon'] %>"></i>
         <%= temp_format @place.current_weather['main']['temp'], @place.country_code %>
-
       </div>
+      <div><%= @place.current_weather['weather'].first['description'].humanize %></div>
       <div>Feels Like: <%= temp_format @place.current_weather['main']['feels_like'], @place.country_code %></div>
       <div>
         H: <%= temp_format @place.current_weather['main']['temp_max'], @place.country_code %> &nbsp;
@@ -35,8 +35,8 @@
         <% @place.weather_forecast['list'].first(5).each do |item| %>
           <tr class="forecast-item">
             <td><%= time_format item['dt'], @place.timezone, "%-l%P" %></td>
-            <td><%= icon_url item['weather'].first['icon'],
-                             item['weather'].first['main'] %></td>
+            <td><i class="<%= icon_css item['weather'].first['id'],
+                                       item['weather'].first['icon'] %>"></i></td>
             <td calss="forecast-temp">
               <%= temp_format item['main']['temp_min'], @place.country_code %> &ndash;
               <%= temp_format item['main']['temp_max'], @place.country_code %>
@@ -51,8 +51,8 @@
         <% @place.weather_forecast['list'].values_at(*(1...40).step(8)).each do |item| %>
           <tr class="forecast-item">
             <td><%= time_format item['dt'], @place.timezone, "%A" %></td>
-            <td><%= icon_url item['weather'].first['icon'],
-                             item['weather'].first['main'] %></td>
+            <td><i class="<%= icon_css item['weather'].first['id'],
+                                       item['weather'].first['icon'] %>"></i></td>
             <td class="forecast-temp"><%= temp_format item['main']['temp'], @place.country_code %></td>
           </tr>
         <% end %>

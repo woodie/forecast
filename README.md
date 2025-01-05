@@ -86,9 +86,9 @@ Place
     when weather data is fresh
       should return false
     when weather data is stale
-      when @use_wk_api false
+      when @use_wk_api is false
         should return true
-      when @legacy_api true
+      when @use_wk_api is true
         should return true
   #legacy_weather
     returns Open Weather payload
@@ -112,11 +112,13 @@ Weather
         redirects to search page with flash message
       with no postal code at address
         redirects to search page with flash message
-      with valid postal address
-        with bad openweather API key
-          redirects to search page with flash message
+      with an existing place
         with current weather and forcast data
           renders the result page
+        with a new place
+          renders the result page
+          with bad weather service credentials
+            redirects to search page with flash message
 
 WeatherController
   routing

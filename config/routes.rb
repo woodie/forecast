@@ -12,4 +12,5 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root "weather#search"
   post "/", to: "weather#result", as: "result"
+  get "/icons", to: "weather#icons", as: "icons"
 end

@@ -1,15 +1,22 @@
 class Place < ApplicationRecord
   attr_writer :use_wk_api
 
-  WK2OW = {Clear: 1, Cloudy: 3, Dust: 50, Fog: 50, Haze: 50, MostlyClear: 1,
-           MostlyCloudy: 3, PartlyCloudy: 3, ScatteredThunderstorms: 11, Smoke: 50,
-           Breezy: 50, Windy: 50, Drizzle: 10, HeavyRain: 10, Rain: 10, Showers: 10,
-           Flurries: 13, HeavySnow: 13, MixedRainAndSleet: 9, MixedRainAndSnow: 9,
-           MixedRainfall: 10, MixedSnowAndSleet: 9, ScatteredShowers: 9,
-           ScatteredSnowShowers: 9, Sleet: 13, Snow: 13, SnowShowers: 13,
-           Blizzard: 13, BlowingSnow: 13, FreezingDrizzle: 10, FreezingRain: 10,
-           Frigid: 13, Hail: 10, Hot: 1, Hurricane: 50, IsolatedThunderstorms: 11,
-           SevereThunderstorm: 11, Thunderstorm: 11, Tornado: 50, TropicalStorm: 9}
+  NEUTRAL = [210, 310, 601, 602] + [771, 901, 905] # forced + no-d/n, see: /owm-codes.html & /icons
+  ICON_ID = {Clear: 800, Cloudy: 801, Dust: 731, Fog: 741, Haze: 721, MostlyClear: 800,
+             MostlyCloudy: 804, PartlyCloudy: 801, ScatteredThunderstorms: 200, Smoke: 711,
+             Breezy: 771, Windy: 957, Drizzle: 500, HeavyRain: 310, Rain: 520, Showers: 520,
+             Flurries: 600, HeavySnow: 601, MixedRainAndSleet: 310, MixedRainAndSnow: 611,
+             MixedRainfall: 310, MixedSnowAndSleet: 611, ScatteredShowers: 701,
+             ScatteredSnowShowers: 511, Sleet: 611, Snow: 600, SnowShowers: 601,
+             Blizzard: 601, BlowingSnow: 601, FreezingDrizzle: 602, FreezingRain: 602,
+             Frigid: 903, Hail: 906, Hot: 904, Hurricane: 902, IsolatedThunderstorms: 200,
+             SevereThunderstorm: 210, Thunderstorm: 200, Tornado: 781, TropicalStorm: 200}
+  # https://openweathermap.org/weather-conditions
+  OW_TEXT = {1 => :ClearSky, 2 => :FewClouds, 3 => :ScatteredClouds, 4 => :BrokenClouds,
+             9 => :ShowerRain, 10 => :Rain, 11 => :Thunderstorm, 13 => :Snow, 50 => :Mist}
+  OW_ICON = {200 => 11, 210 => 11, 310 => 9, 500 => 10, 511 => 9, 520 => 9, 600 => 13, 601 => 10,
+             602 => 13, 611 => 13, 711 => 50, 721 => 50, 731 => 50, 741 => 50, 771 => 1, 781 => 50,
+             800 => 1, 801 => 2, 804 => 3, 902 => 50, 903 => 1, 904 => 1, 906 => 10, 957 => 50}
 
   def initialize(params)
     super
@@ -48,7 +55,8 @@ class Place < ApplicationRecord
     code = cw["conditionCode"]
     {coord: {lon: cw["metadata"]["longitude"], lat: cw["metadata"]["latitude"]},
      dt: DateTime.parse(cw["asOf"]).to_i, weather: [
-       {main: code, description: code.underscore.humanize.downcase, icon: icon(code, cw["daylight"])}
+       {id: number(code), main: code, icon: icon(code, cw["daylight"]),
+        description: code.underscore.humanize.downcase}
      ], main: {
        temp: m2k(cw["temperature"]), feels_like: m2k(cw["temperatureApparent"]),
        temp_min: m2k(df["temperatureMin"]), temp_max: m2k(df["temperatureMax"]),
@@ -56,8 +64,12 @@ class Place < ApplicationRecord
      }}
   end
 
-  def icon(condition, daylight = true)
-    num = WK2OW[condition.to_sym].to_s
+  def number(code)
+    ICON_ID[code.to_sym]
+  end
+
+  def icon(code, daylight = true)
+    num = OW_ICON[number(code)].to_s
     "#{num.rjust(2, "0")}#{daylight ? "d" : "n"}"
   end
 

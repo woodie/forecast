@@ -87,7 +87,7 @@ RSpec.describe Place, type: :model do
         end
       end
 
-      context "when use_wk_api is true" do
+      context "when @use_wk_api is true" do
         before { place.use_wk_api = true }
         it "should return true" do
           expect(place).to receive_message_chain(:wk_api, :current).with(coords).and_return(wk_obj)
@@ -102,7 +102,7 @@ RSpec.describe Place, type: :model do
       {coord: {lat: 39.33, lon: -120.18}, dt: 1735383963,
        main: {feels_like: 269.85, humidity: 0.88, pressure: 1013.46,
               temp: 274.99, temp_max: 279.53, temp_min: 274.47, visibility: 1662.17},
-       weather: [{description: "cloudy", icon: "03n", main: "Cloudy"}]}
+       weather: [{id: 801, description: "cloudy", icon: "02n", main: "Cloudy"}]}
     end
 
     it "returns Open Weather payload" do
@@ -112,10 +112,10 @@ RSpec.describe Place, type: :model do
 
   describe "#icon" do
     it "returns Open Weather icon" do
-      expect(place.send(:icon, Place::WK2OW.keys.first)).to eq "01d"
-      expect(place.send(:icon, Place::WK2OW.keys.first, false)).to eq "01n"
-      expect(place.send(:icon, Place::WK2OW.keys.last)).to eq "09d"
-      expect(place.send(:icon, Place::WK2OW.keys.last, false)).to eq "09n"
+      expect(place.send(:icon, "Clear")).to eq "01d"
+      expect(place.send(:icon, "Clear", false)).to eq "01n"
+      expect(place.send(:icon, "Snow")).to eq "13d"
+      expect(place.send(:icon, "Snow", false)).to eq "13n"
     end
   end
 

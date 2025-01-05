@@ -35,6 +35,9 @@ t = Time.at(1733966196).localtime(-18000) => 2024-12-11 20:16:36 -0500
 t = Time.at(1733966196).localtime(-28800) => 2024-12-11 17:16:36 -0800 
 ```
 
+Dealing with fonts...
+https://world.hey.com/aesmail/custom-fonts-in-production-in-rails-7-0-d3765485
+
 Resetting the database greatly simplifies debugging schema.
 ```sh
 rails db:migrate:reset

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Open Weather Map Codes</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,300' rel='stylesheet' type='text/css'-->
+
+  <link rel="stylesheet" href="/assets/weather-icons.min-9861622e.css"/>
+  <style>
+    body {
+      font-family: 'Open Sans';
+      background-color: azure;
+    }
+    tbody {
+      font-size: 20pt;
+      b { color: purple; }
+      i {
+        color: purple;
+        font-size: 36pt;
+      }
+      div {
+        margin-top: 1em;
+        margin-right: 1em;
+      }
+      .code {
+        color: gray;
+        font-size: 16pt;
+      }
+    }
+  </style>
+
+  <script>
+    const render = (data) => {
+      const sections = ['Daytime', 'Neutral', 'Nighttime'];
+      sections.forEach((section) => {
+        let node = document.getElementById(section);
+        let lines = [`<div><b>${section}</b></div>`];
+        for (const code in data[section]) {
+          const label = data[section][code];
+          if (label == 'n/a') {
+            lines.push(`<div class="icon"><i class="wi">&nbsp;&nbsp;</i>
+                <span class="code">${code}</span><br/>&nbsp;</div>`);
+          } else {
+            lines.push(`<div class="icon"><i class="wi ${code}"></i>
+                <span class="code">${code}</span><br/>${label}</div>`);
+          }
+        }
+        node.innerHTML = lines.join("\n");
+      });
+    }
+
+    const gallery = () => {
+      let lines = [];
+      let node = document.getElementById('gallery');
+      for (let i = 200; i < 1000; i = i + 10) {
+        lines.push(`<tr>`);
+        for (let n = 0; n < 10; n++) {
+          lines.push(`<td><i class="wi wi-owm-day-${i + n}"></i>${i + n} </td>`);
+        }
+        lines.push(`</tr>`);
+      }
+      node.innerHTML = lines.join("\n");
+    }
+
+    const loadData = () => {
+      fetch('/assets/fonts/owm_codes.json')
+        .then(resp => resp.json())
+        .then(data => {
+          render(data);
+         });
+      // gallery();
+    }
+  </script>
+</head>
+
+<body>
+  <h1>Open Weather Map Codes</h1>
+
+  <table>
+    <tbody>
+      <tr>
+        <td style='vertical-align:top;' id="Daytime"></td>
+        <td style='vertical-align:top;'id="Nighttime"></td>
+        <td style='vertical-align:top;'id="Neutral"></td>
+      </tr>
+    </tbody>
+  </table >
+
+<br/>
+<br/>
+
+  <table>
+    <tbody id="gallery">
+    </tbody>
+  </table >
+
+  
+
+  <script type="text/javascript">
+    (function(){ loadData(); })();
+  </script>
+</body>
+</html>

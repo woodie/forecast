@@ -49,13 +49,31 @@ RSpec.describe "Weather", type: :request do
         end
       end
 
-      context "with valid postal address" do
+      context "with an existing place" do
         context "with current weather and forcast data" do
+          before { allow(Place).to receive(:geo_create).and_return(build(:populated_place)) }
+          it "renders the result page" do
+            post root_url, params: {"search[address]": "Truckee, CA"}
+            expect(flash[:notice]).to be_nil
+            expect(response).not_to redirect_to(root_url)
+          end
+        end
+
+        context "with a new place" do
           before { create(:address) }
           it "renders the result page" do
             post root_url, params: {"search[address]": "Truckee, CA"}
             expect(flash[:notice]).to be_nil
             expect(response).not_to redirect_to(root_url)
+          end
+
+          context "with bad weather service credentials" do
+            before { allow_any_instance_of(Place).to receive(:refresh_weather).and_raise(RestClient::Unauthorized) }
+            it "redirects to search page with flash message" do
+              post root_url, params: {"search[address]": "Truckee, CA"}
+              expect(flash[:notice]).to end_with "weather service cannot process request."
+              expect(response).to redirect_to(root_url)
+            end
           end
         end
       end
