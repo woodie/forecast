@@ -328,3 +328,46 @@ client.weather(lat, lon, sets).as_json
    "forecast_next_hour"=>{},
    "weather_alerts"=>{}}}
 ```
+
+### Looking at forcast data
+
+Currrently show min/max temperature for the hourly forecast and just
+the temperature for the 5-day forecast. Will need to flip the data around.
+
+```rb
+data = wk_api.forecast(lat: lat, lon: lon)
+
+data["forecastHourly"]["hours"].size => 249
+data["forecastHourly"]["hours"].map {|o| [o["forecastStart"], o["temperature"]] }
+ =>
+[["2025-01-05T05:00:00Z", 20.44],
+ ...
+ ["2025-01-05T06:00:00Z", 20.31],
+ ["2025-01-06T06:00:00Z", 18.57],
+ ["2025-01-07T06:00:00Z", 19.35],
+ ["2025-01-08T06:00:00Z", 19.59],
+ ["2025-01-09T06:00:00Z", 19.58],
+ ["2025-01-10T06:00:00Z", 18.43],
+ ["2025-01-11T06:00:00Z", 17.69],
+ ["2025-01-12T06:00:00Z", 19.03],
+ ["2025-01-13T06:00:00Z", 14.64],
+ ["2025-01-14T06:00:00Z", 15.82],
+ ...
+ ["2025-01-15T12:00:00Z", 12.7],
+ ["2025-01-15T13:00:00Z", 15.51]]
+
+data["forecastDaily"]["days"].map {|o| [o["forecastStart"], o["forecastEnd"],
+   o["daytimeForecast"]["forecastStart"], o["daytimeForecast"]["forecastEnd"],
+   o["overnightForecast"]["forecastStart"], o["overnightForecast"]["forecastEnd"]] }
+ =>
+[["2025-01-05T06:00:00Z", "2025-01-06T06:00:00Z",
+  "2025-01-05T13:00:00Z", "2025-01-06T01:00:00Z",  # 1/5, 1pm - 1/6, 1am
+  "2025-01-06T01:00:00Z", "2025-01-06T13:00:00Z"], # 1/6, 1am - 1/6, 1pm
+ ["2025-01-06T06:00:00Z", "2025-01-07T06:00:00Z",
+  "2025-01-06T13:00:00Z", "2025-01-07T01:00:00Z",  # 1/6, 1pm - 1/7, 1am
+  "2025-01-07T01:00:00Z", "2025-01-07T13:00:00Z"], # 1/7, 1am - 1/7, 1pm
+ ...
+ ["2025-01-14T06:00:00Z", "2025-01-15T06:00:00Z",
+  "2025-01-14T13:00:00Z", "2025-01-15T01:00:00Z",  # 1/14, 1pm - 1/15, 1am
+  "2025-01-15T01:00:00Z", "2025-01-15T13:00:00Z"]] # 1/15, 1am - 1/15, 1pm
+```

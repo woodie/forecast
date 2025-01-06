@@ -2,15 +2,17 @@ require "rails_helper"
 
 RSpec.describe Place, type: :model do
   let(:place) { build(:place) }
+  let(:wk_cw) do
+    {"metadata" => {"longitude" => -120.18, "latitude" => 39.33},
+     "asOf" => "2024-12-28T11:06:03Z", "temperature" => 1.84,
+     "temperatureApparent" => -3.3, "conditionCode" => "Cloudy", "daylight" => false,
+     "pressure" => 1013.46, "humidity" => 0.88, "visibility" => 1662.17}
+  end
+  let(:wk_df) do
+    {"temperatureMin" => 1.32, "temperatureMax" => 6.38}
+  end
   let(:wk_obj) do
-    {"currentWeather" => {
-      "metadata" => {"longitude" => -120.18, "latitude" => 39.33},
-      "asOf" => "2024-12-28T11:06:03Z", "temperature" => 1.84,
-      "temperatureApparent" => -3.3, "conditionCode" => "Cloudy", "daylight" => false,
-      "pressure" => 1013.46, "humidity" => 0.88, "visibility" => 1662.17
-    }, "forecastDaily" => {"days" => [
-      {"restOfDayForecast" => {"temperatureMin" => 1.32, "temperatureMax" => 6.38}}
-    ]}}
+    {"currentWeather" => wk_cw, "forecastDaily" => {"days" => [{"restOfDayForecast" => wk_df}]}}
   end
 
   describe ".geo_create" do
@@ -106,7 +108,7 @@ RSpec.describe Place, type: :model do
     end
 
     it "returns Open Weather payload" do
-      expect(place.send(:legacy_weather, wk_obj)).to match payload
+      expect(place.send(:legacy_weather, wk_cw, wk_df)).to match payload
     end
   end
 

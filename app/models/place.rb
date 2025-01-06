@@ -38,8 +38,14 @@ class Place < ApplicationRecord
     return false if updated_at > Time.now - 30.minutes &&
       current_weather.present? && weather_forecast.present?
 
-    weather_data = (!@use_wk_api) ? ow_api.current(lat: lat, lon: lon) :
-                     legacy_weather(wk_api.current(lat: lat, lon: lon))
+    if @use_wk_api
+      raw = wk_api.current(lat: lat, lon: lon)
+      weather_data = legacy_weather raw["currentWeather"],
+        raw["forecastDaily"]["days"].first["restOfDayForecast"]
+    else
+      weather_data = ow_api.current(lat: lat, lon: lon)
+    end
+
     update(current_weather: weather_data)
 
     forecast_data = ow_api.forecast(lat: lat, lon: lon)
@@ -49,9 +55,7 @@ class Place < ApplicationRecord
 
   private
 
-  def legacy_weather(obj)
-    cw = obj["currentWeather"]
-    df = obj["forecastDaily"]["days"].first["restOfDayForecast"]
+  def legacy_weather(cw, df)
     code = cw["conditionCode"]
     {coord: {lon: cw["metadata"]["longitude"], lat: cw["metadata"]["latitude"]},
      dt: DateTime.parse(cw["asOf"]).to_i, weather: [
