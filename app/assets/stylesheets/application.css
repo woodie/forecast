@@ -49,3 +49,4 @@ img.weather-icon { width 0.8em; height: 0.8em; cursor:pointer }
 }
 .select { border: 2px solid Blue; }
 .bypass { color: Gray; }
+.review { height: 60px; }

@@ -99,6 +99,17 @@ RSpec.describe Place, type: :model do
     end
   end
 
+  describe "#icon" do
+    it "returns Open Weather icon" do
+      expect(place.icon("Clear")).to eq "01d"
+      expect(place.icon("Clear", false)).to eq "01n"
+      expect(place.icon("Snow")).to eq "13d"
+      expect(place.icon("Snow", false)).to eq "13n"
+      expect(place.icon("Dust")).to eq "50d"
+      expect(place.icon("Dust", false)).to eq "50n"
+    end
+  end
+
   describe "#legacy_weather" do
     let(:payload) do
       {coord: {lat: 39.33, lon: -120.18}, dt: 1735383963,
@@ -109,15 +120,6 @@ RSpec.describe Place, type: :model do
 
     it "returns Open Weather payload" do
       expect(place.send(:legacy_weather, wk_cw, wk_df)).to match payload
-    end
-  end
-
-  describe "#icon" do
-    it "returns Open Weather icon" do
-      expect(place.send(:icon, "Clear")).to eq "01d"
-      expect(place.send(:icon, "Clear", false)).to eq "01n"
-      expect(place.send(:icon, "Snow")).to eq "13d"
-      expect(place.send(:icon, "Snow", false)).to eq "13n"
     end
   end
 

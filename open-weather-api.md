@@ -16,9 +16,12 @@ that use NOAA data.
 
 OpenWeatherAPI is free and has what we need.
 
+UPDATE: Migrating to Apple WeatherKit just for gun.
+
 ### Address geocoding
 
 We can assume the Geocoder will not return a bad zip code, but handle it.
+The Apple WeatherKit takes a lat/lon. The legacy behaviour can be simple too.
 
 ```rb
 open_weather_api = Rails.configuration.open_weather_api

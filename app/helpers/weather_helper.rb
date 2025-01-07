@@ -1,7 +1,7 @@
 module WeatherHelper
-  def icon_url(code, alt = "icon")
+  def icon_url(code, klass = "", alt = "icon")
     image_tag "https://openweathermap.org/img/wn/#{code}@2x.png",
-        alt: alt, title: alt, class: "weather-icon"
+        alt: alt, title: alt, class: klass
   end
 
   def icon_css(id, code = "")

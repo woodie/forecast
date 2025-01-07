@@ -38,11 +38,11 @@ Highlight temperature as it was the core element requested.
 - Display in localtime for current and forecast data.
 
 Things to consider in the future:
-- Use [tenkit](https://github.com/superbasicxyz/tenkit) for Apple's WeatherKit API in Ruby
   and [jekyll](https://github.com/ZekeSnider/jekyll-apple-maps/) for Apple's geocoder.
 - Provide a way to flip between °F/°C in JS
 - Render the Place but put bckground the Weather API
   and update the page when the data is available.
+- Use Rollout to flip between weather APIs
 
 We will use [better icons](https://github.com/hasankoroglu/OpenWeatherMap-Icons).
 
