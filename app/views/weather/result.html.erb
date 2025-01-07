@@ -32,7 +32,7 @@
     <div id="weather-forecast">
       <table>
         <tbody>
-        <% @place.weather_forecast['list'].first(5).each do |item| %>
+        <% @place.weather_forecast['hourly'].each do |item| %>
           <tr class="forecast-item">
             <td><%= time_format item['dt'], @place.timezone, "%-l%P" %></td>
             <td><i class="<%= icon_css item['weather'].first['id'],
@@ -48,7 +48,7 @@
       <div class="weather-time">5-DAY FORECAST</div>
       <table>
         <tbody>
-        <% @place.weather_forecast['list'].values_at(*(1...40).step(8)).each do |item| %>
+        <% @place.weather_forecast['daily'].each do |item| %>
           <tr class="forecast-item">
             <td><%= time_format item['dt'], @place.timezone, "%A" %></td>
             <td><i class="<%= icon_css item['weather'].first['id'],

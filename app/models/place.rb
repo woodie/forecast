@@ -48,7 +48,7 @@ class Place < ApplicationRecord
 
     update(current_weather: weather_data)
 
-    forecast_data = ow_api.forecast(lat: lat, lon: lon)
+    forecast_data = arrange_forecast ow_api.forecast(lat: lat, lon: lon)
     update(weather_forecast: forecast_data)
     true
   end
@@ -71,6 +71,15 @@ class Place < ApplicationRecord
        temp_min: m2k(df["temperatureMin"]), temp_max: m2k(df["temperatureMax"]),
        pressure: cw["pressure"], humidity: cw["humidity"], visibility: cw["visibility"]
      }}
+  end
+
+  def arrange_forecast(feed)
+    payload = {hourly: [], daily: []}
+    if feed["list"].present?
+      payload[:hourly] = feed['list'].first(5)
+      payload[:daily] = feed['list'].values_at(*(1...40).step(8))
+    end
+    payload
   end
 
   def number(code)

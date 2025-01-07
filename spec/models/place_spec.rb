@@ -123,6 +123,16 @@ RSpec.describe Place, type: :model do
     end
   end
 
+  describe "#arrange_forecast" do
+    let(:data) { {weather: :data} }
+    let(:feed) { {"list" => Array.new(40) { data }} }
+    let(:tidy) { {hourly: Array.new(5) { data }, daily: Array.new(5) { data }} }
+
+    it "sets hourly and daily data" do
+      expect(place.send(:arrange_forecast, feed)).to match(tidy)
+    end
+  end
+
   describe "#m2k" do
     it "converts metric to kelvin" do
       expect(place.send(:m2k, 0.0)).to be 273.15

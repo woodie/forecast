@@ -90,10 +90,12 @@ Place
         should return true
       when @use_wk_api is true
         should return true
-  #legacy_weather
-    returns Open Weather payload
   #icon
     returns Open Weather icon
+  #legacy_weather
+    returns Open Weather payload
+  #arrange_forecast
+    sets hourly and daily data
   #m2k
     converts metric to kelvin
   #ow_api
