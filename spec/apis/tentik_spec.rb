@@ -1,25 +1,31 @@
 require "rails_helper"
 
-RSpec.describe 'Tenkin::Client' do
-  let(:lat) { 39.3385 }
-  let(:lon) { -120.1729 } 
+RSpec.describe "Tenkin::Client" do
+  let(:lat) { 10.02 }
+  let(:lon) { -84.2 }
   let(:coords) { {lat: lat, lon: lon} }
 
-  subject { Tenkit::Client.new  }
+  subject { Tenkit::Client.new }
 
   describe "#current" do
     let(:path) { "/weather/en/#{lat}/#{lon}?dataSets=currentWeather,forecastDaily" }
-    it "passes currentWeather & forecastDaily" do
-      expect(subject).to receive(:get).with(path)
-      subject.current(coords)
-    end 
-  end 
+    let(:feed) { JSON.parse File.read("test/fixtures/current.json") }
+    it "contains expected keys" do
+      expect(subject).to receive(:get).with(path).and_return(feed)
+      resp = subject.current(coords)
+      expect(resp["currentWeather"]).to be_present
+      expect(resp["forecastDaily"]).to be_present
+    end
+  end
 
   describe "#forecast" do
     let(:path) { "/weather/en/#{lat}/#{lon}?dataSets=forecastHourly,forecastDaily" }
-    it "passes forecastHourly & forecastDaily" do
-      expect(subject).to receive(:get).with(path)
-      subject.forecast(coords)
-    end 
-  end 
+    let(:feed) { JSON.parse File.read("test/fixtures/forecast.json") }
+    it "contains expected keys" do
+      expect(subject).to receive(:get).with(path).and_return(feed)
+      resp = subject.forecast(coords)
+      expect(resp["forecastHourly"]).to be_present
+      expect(resp["forecastDaily"]).to be_present
+    end
+  end
 end

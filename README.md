@@ -51,9 +51,9 @@ rspec spec -fd
 
 Tenkin::Client
   #current
-    passes currentWeather & forecastDaily
+    contains expected keys
   #forecast
-    passes forecastHourly & forecastDaily
+    contains expected keys
 
 WeatherHelper
   #icon_url
