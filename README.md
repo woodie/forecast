@@ -12,6 +12,8 @@ use [Apple WeatherKit API](apple-weather-api.md).
 - Apple WeatherKit hourly provides temperature and daily provides min/max.
   This is opposite from what the initial implementation renders.
 
+Set `:use_wk_api` fo false in `config/feature.yml` to use the OpenWeather API.
+
 ### Setup and configuration
 
 Request some credentials.
@@ -50,6 +52,13 @@ rails s
 
 ```sh
 rspec spec -fd
+
+Feature
+  use_wk_api
+    when activated
+      reports true
+    when deactivated
+      reports false
 
 Tenkin::Client
   #current
@@ -93,9 +102,9 @@ Place
     when weather data is fresh
       should return false
     when weather data is stale
-      when @use_wk_api is false
+      when :use_wk_api is false
         should return true
-      when @use_wk_api is true
+      when :use_wk_api is true
         should return true
   #icon
     returns Open Weather icon

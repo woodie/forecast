@@ -48,6 +48,7 @@ gem "open-weather-api"
 gem "heat-index"
 gem "pry"
 gem "strong_migrations"
+gem 'feature'
 
 group :development, :test do
   gem 'factory_bot_rails'

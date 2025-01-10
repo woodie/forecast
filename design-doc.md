@@ -21,10 +21,9 @@ Will use the most current version of Rails with Geocoder and OpenWeatherApi ruby
 - The Weather controller will process the transactions
 - Handle exception when Geocoder returns a null place
 - Fetch `current_weather` and `weather_forecast` in Place model
-- Handle when exception when OpenWeatherAPI fails
+- Handle when exception when APIs fail
 - Cache each weather objects for 30 minutes and provide indicator
-- Tests could mock APIs with webmock (instead of vcr),
-  but that ended up more clumsy than manually mocking
+- Use feature gem to flip befween weather APIs
 
 ### UI considerations
 
@@ -38,11 +37,7 @@ Highlight temperature as it was the core element requested.
 - Display in localtime for current and forecast data.
 
 Things to consider in the future:
-  and [jekyll](https://github.com/ZekeSnider/jekyll-apple-maps/) for Apple's geocoder.
 - Provide a way to flip between °F/°C in JS
-- Render the Place but put bckground the Weather API
-  and update the page when the data is available.
-- Use Rollout to flip between weather APIs
 
 We will use [better icons](https://github.com/hasankoroglu/OpenWeatherMap-Icons).
 
@@ -52,22 +47,23 @@ We will use [better icons](https://github.com/hasankoroglu/OpenWeatherMap-Icons)
 .---------------------.
 |  City, ZIP, COUNTY  |
 |     <icon> 57°F     |
+|      Clear Sky      |
 |   Feels Like: 62°   |
 |     H:66° L:43°     |
 | Weather data from T |
 |  Next refresh at T  | <= cache indicator
 |                     |
-|  8am <icon> 57°-66° |
-| 11am <icon> 55°-63° |
-|  2pm <icon> 62°-64° |
-|  5pm <icon> 57°-66° |
-|  8pm <icon> 55°-63° |
+|  Wed 5pm  <i>  56°  |
+|  Wed 8pm  <i>  50°  |
+|  Wec 11pm <i>  49°  |
+|  Thu 2am  <i>  55°  |
+|  Thu 5am  <i>  55°  |
 |    5-DAY FORECAST   |
-| Thursday <icon> 57° |
-| Friday   <icon> 56° |
-| Saturday <icon> 55° |
-| Sunday   <icon> 54° |
-| Monday   <icon> 53° |
+|  Thu  <i>  54°-56°  |
+|  Fri  <i>  53°-56°  |
+|  Sat  <i>  52°-55°  |
+|  Sun  <i>  50°-54°  |
+|  Mon  <i>  51°-53°  |
 '---------------------'
 ```
 
