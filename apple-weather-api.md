@@ -371,3 +371,9 @@ data["forecastDaily"]["days"].map {|o| [o["forecastStart"], o["forecastEnd"],
   "2025-01-14T13:00:00Z", "2025-01-15T01:00:00Z",  # 1/14, 1pm - 1/15, 1am
   "2025-01-15T01:00:00Z", "2025-01-15T13:00:00Z"]] # 1/15, 1am - 1/15, 1pm
 ```
+
+### Attribution
+
+WeatherKit REST API attribution logo when not using the Swift wrappers
+- https://developer.apple.com/weatherkit/#attribution-requirements
+- https://forums.developer.apple.com/forums/thread/708013

@@ -60,4 +60,15 @@
   </div>
 </div>
 
-<div id="disclaimer">&copy; <%= link_to "OpenStreetMap", "http://osm.org/copyright", target: "_blank" %> contributors</div>
+<div id="disclaimer">
+<% if @place.current_weather['cod'].present? %>
+  Weather data provided by <%= link_to "OpenWeather",
+  "https://openweathermap.org/", target: "_blank" %>
+<% else %>
+   Weather <%= link_to "data sources",
+  "https://developer.apple.com/weatherkit/data-source-attribution/", target: "_blank" %>
+<% end %>
+<br/>
+  © <%= link_to "OpenStreetMap",
+  "http://osm.org/copyright", target: "_blank" %> contributors
+</div>

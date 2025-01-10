@@ -84,3 +84,12 @@ open_weather_api.forecast(lat:39.3385, lon: -120.1729)
 ```
 
 Although OpenWeatherApi is old and a bit broken, it provides one forecast API that's free.
+
+### License and attribution
+
+For the Free plan, unclear is the attribution requirement is obligatory.
+
+- Text that reads 'Weather data provided by OpenWeather’
+- Hyperlink to 'https://openweathermap.org/'
+
+https://openweathermap.org/faq
