@@ -16,7 +16,7 @@ class Place < ApplicationRecord
              ShowerRain: 9, Rain: 10, Thunderstorm: 11, Snow: 13, Mist: 50}
   OW_ICON = {200 => 11, 210 => 11, 310 => 9, 500 => 10, 511 => 13, 520 => 9,
              600 => 13, 601 => 13, 602 => 10, 611 => 9, 800 => 1, 801 => 2,
-             804 => 3, 903 => 13, 904 => 1, 906 => 10, 957 => 50} # default 50
+             804 => 3, 903 => 13, 904 => 1, 906 => 10} # default 50
 
   def initialize(params)
     super

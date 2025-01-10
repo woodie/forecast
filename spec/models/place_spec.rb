@@ -14,9 +14,9 @@ RSpec.describe Place, type: :model do
   end
 
   describe ".geo_create" do
-    let(:state) { nil }
-    let(:district) { nil }
-    let(:province) { nil }
+    let(:state) { "State" }
+    let(:district) { "District" }
+    let(:province) { "Province" }
     let(:geo) {
       double("GeocoderResult",
         data: {"address" => {"district" => district, "province" => province}},
@@ -28,7 +28,7 @@ RSpec.describe Place, type: :model do
     subject { Place.geo_create(geo) }
 
     it "uses result attributes" do
-      expect(subject.state).to be_nil
+      expect(subject.state).to eq(state)
       expect(subject.city).to eq("Truckee")
       expect(subject.country).to eq("United States")
       expect(subject.postal_code).to eq("96161")
@@ -37,24 +37,17 @@ RSpec.describe Place, type: :model do
       expect(subject.lon).to eq(-120.1234)
     end
 
-    context "when state present" do
-      let(:state) { "State" }
-      it "uses state" do
-        expect(subject.state).to eq(state)
-      end
-    end
-
-    context "when district present" do
-      let(:district) { "District" }
+    context "when state missing" do
+      let(:state) { nil }
       it "uses district" do
         expect(subject.state).to eq(district)
       end
-    end
 
-    context "when province present" do
-      let(:province) { "Province" }
-      it "uses province" do
-        expect(subject.state).to eq(province)
+      context "when district missing" do
+        let(:district) { nil }
+        it "uses province" do
+          expect(subject.state).to eq(province)
+        end
       end
     end
   end

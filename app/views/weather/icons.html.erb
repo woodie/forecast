@@ -29,8 +29,8 @@
             <td class="bigger <%= css.last %>"><i class='wi wi-owm-night-<%= code %>'></i></td>
             <td class="bigger <%= css.first %>"><i class='wi wi-owm-<%= code %>'></i></td>
             <td>&nbsp;<%= condition %></td>
-            <td style=""><%= icon_url Place.new.icon(condition, true), :review %></td>
-            <td style=""><%= icon_url Place.new.icon(condition, false),:review %></td>
+            <td style=""><%= icon_tag Place.new.icon(condition, true), :review %></td>
+            <td style=""><%= icon_tag Place.new.icon(condition, false),:review %></td>
             </td>
           </tr>
         <% end %>

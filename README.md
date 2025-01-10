@@ -58,7 +58,7 @@ Tenkin::Client
     contains expected keys
 
 WeatherHelper
-  #icon_url
+  #icon_tag
     returns populated IMG tag
   #time_format
     with West Coast location
@@ -78,12 +78,10 @@ WeatherHelper
 Place
   .geo_create
     uses result attributes
-    when state present
-      uses state
-    when district present
+    when state missing
       uses district
-    when province present
-      uses province
+      when district missing
+        uses province
   #refresh_weather
     when weather data is fresh
       should return false
@@ -96,8 +94,20 @@ Place
     returns Open Weather icon
   #legacy_weather
     returns Open Weather payload
+  #legacy_forecast
+    with hourly feed missing min/max
+      returns composite payload
+    with daily feed missing temp
+      returns composite payload
   #arrange_forecast
-    sets hourly and daily data
+    with OW payload
+      sets hourly and daily data
+    with WK payload
+      sets hourly and daily data
+  #next_hour_at
+    returns index to next hours data
+    when all entries are in the past
+      returns -1 to indicate bad data
   #m2k
     converts metric to kelvin
   #ow_api
