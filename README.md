@@ -60,6 +60,13 @@ Tenkin::Client
 WeatherHelper
   #icon_tag
     returns populated IMG tag
+  #icon_css
+    with a day icon
+      returns wi day class
+    with a night icon
+      returns wi night class
+      with neutral-only id
+        returns wi neutral class
   #time_format
     with West Coast location
       returns formated string

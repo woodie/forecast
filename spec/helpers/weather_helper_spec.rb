@@ -10,6 +10,32 @@ RSpec.describe WeatherHelper, type: :helper do
     end
   end
 
+  describe "#icon_css" do
+    let(:id) { 800 }
+    let(:opt) { {'id' => id, 'icon' => icon} }
+
+    context "with a day icon" do
+      let(:icon) { "01d" }
+      it "returns wi day class" do
+        expect(helper.icon_css(opt)).to eq "wi wi-owm-day-800"
+      end
+    end
+
+    context "with a night icon" do
+      let(:icon) { "01n" }
+      it "returns wi night class" do
+        expect(helper.icon_css(opt)).to eq "wi wi-owm-night-800"
+      end
+
+      context "with neutral-only id" do
+        let(:id) { 602 }
+        it "returns wi neutral class" do
+          expect(helper.icon_css(opt)).to eq "wi wi-owm-602"
+        end
+      end
+    end
+  end
+
   describe "#time_format" do
     let(:datetime) { 1732656764 }
     context "with West Coast location" do

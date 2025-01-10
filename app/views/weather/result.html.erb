@@ -10,8 +10,7 @@
 
     <div id="current-weather">
       <div class="weather-main">
-        <i class="<%= icon_css @place.current_weather['weather'].first['id'],
-                               @place.current_weather['weather'].first['icon'] %>"></i>
+        <i class="<%= icon_css @place.current_weather['weather'].first %>"></i>
         <%= temp_format @place.current_weather['main']['temp'], @place.country_code %>
       </div>
       <div><%= @place.current_weather['weather'].first['description'].humanize %></div>
@@ -32,14 +31,11 @@
       <table>
         <tbody>
         <% @place.weather_forecast['hourly'].each do |item| %>
+          <% %>
           <tr class="forecast-item">
-            <td><%= time_format item['dt'], @place.timezone, "%-l%P" %></td>
-            <td><i class="<%= icon_css item['weather'].first['id'],
-                                       item['weather'].first['icon'] %>"></i></td>
-            <td calss="forecast-temp">
-              <%= temp_format item['main']['temp_min'], @place.country_code %> &ndash;
-              <%= temp_format item['main']['temp_max'], @place.country_code %>
-            </td>
+            <td><%= time_format item['dt'], @place.timezone, "%a %-l%P" %></td>
+            <td class="icon"><i class="<%= icon_css item['weather'].first %>"></i></td>
+            <td class="forecast-temp"><%= temp_format item['main']['temp'], @place.country_code %></td>
           </tr>
         <% end %>
         </tbody>
@@ -49,9 +45,12 @@
         <tbody>
         <% @place.weather_forecast['daily'].each do |item| %>
           <tr class="forecast-item">
-            <td><%= time_format item['dt'], @place.timezone, "%A" %></td>
-            <td><i class="wi wi-owm-<%= item['weather'].first['id'] %>"></i></td>
-            <td class="forecast-temp"><%= temp_format item['main']['temp'], @place.country_code %></td>
+            <td><%= time_format item['dt'], @place.timezone, "%a" %></td>
+            <td class="icon"><i class="wi wi-owm-<%= item['weather'].first['id'] %>"></i></td>
+            <td calss="forecast-temp">
+              <%= temp_format item['main']['temp_min'], @place.country_code %> &ndash;
+              <%= temp_format item['main']['temp_max'], @place.country_code %>
+            </td>
           </tr>
         <% end %>
         </tbody>

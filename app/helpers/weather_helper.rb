@@ -4,9 +4,9 @@ module WeatherHelper
         alt: alt, title: alt, class: klass
   end
 
-  def icon_css(id, code = "")
-    return "wi wi-owm-#{id}" if Place::NEUTRAL.include?(id)
-    "wi wi-owm-#{code.end_with?('d') ? :day : :night}-#{id}"
+  def icon_css(opt)
+    return "wi wi-owm-#{opt['id']}" if Place::NEUTRAL.include?(opt['id'])
+    "wi wi-owm-#{opt['icon'].end_with?('d') ? :day : :night}-#{opt['id']}"
   end
 
   # Can do more with localtime format
