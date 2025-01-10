@@ -51,6 +51,13 @@ rails s
 ```sh
 rspec spec -fd
 
+Feature
+  use_wk_api
+    when activated
+      reports true
+    when deactivated
+      reports false
+
 Tenkin::Client
   #current
     contains expected keys

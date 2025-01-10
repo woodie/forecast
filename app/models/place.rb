@@ -1,5 +1,4 @@
 class Place < ApplicationRecord
-  attr_writer :use_wk_api
 
   NEUTRAL = [210, 310, 601, 602] + [771, 901, 905] # forced + no-d/n, see: /owm-codes.html & /icons
   ICON_ID = {Clear: 800, Cloudy: 801, Dust: 731, Fog: 741, Haze: 721, MostlyClear: 800,
@@ -18,11 +17,6 @@ class Place < ApplicationRecord
              600 => 13, 601 => 13, 602 => 10, 611 => 9, 800 => 1, 801 => 2,
              804 => 3, 903 => 13, 904 => 1, 906 => 10} # default 50
 
-  def initialize(params)
-    super
-    @use_wk_api = true # should use rollout gem
-  end
-
   def self.geo_create(geo)
     find_or_create_by(postal_code: geo.postal_code, country_code: geo.country_code) do |place|
       place.city = geo.city
@@ -38,14 +32,14 @@ class Place < ApplicationRecord
     return false if updated_at > Time.now - 30.minutes &&
       current_weather.present? && weather_forecast.present?
 
-    weather_data = if @use_wk_api
+    weather_data = if Feature.active?(:use_wk_api)
       legacy_weather wk_api.current(lat: lat, lon: lon)
     else
       ow_api.current(lat: lat, lon: lon)
     end
     update(current_weather: weather_data)
 
-    forecast_data = if @use_wk_api
+    forecast_data = if Feature.active?(:use_wk_api)
       arrange_forecast wk_api.forecast(lat: lat, lon: lon)
     else
       arrange_forecast ow_api.forecast(lat: lat, lon: lon)

@@ -70,22 +70,22 @@ RSpec.describe Place, type: :model do
     context "when weather data is stale" do
       let(:updated_at) { DateTime.now.utc - 1.hour }
 
-      context "when @use_wk_api is false" do
-        before do
-          place.use_wk_api = false
-          allow(place).to receive_message_chain(:ow_api, :forecast).and_return(forecast)
-        end
+      before { allow(Feature).to receive(:active_features).and_return(features) }
+
+      context "when :use_wk_api is false" do
+        let(:features) { [] }
+        before { allow(place).to receive_message_chain(:ow_api, :forecast).and_return(forecast) }
+
         it "should return true" do
           expect(place).to receive_message_chain(:ow_api, :current).with(coords).and_return(current)
           expect(subject).to be true
         end
       end
 
-      context "when @use_wk_api is true" do
-        before do
-          place.use_wk_api = true
-          allow(place).to receive_message_chain(:wk_api, :forecast).and_return(forecast)
-        end
+      context "when :use_wk_api is true" do
+        let(:features) { [:use_wk_api] }
+        before { allow(place).to receive_message_chain(:wk_api, :forecast).and_return(forecast) }
+
         it "should return true" do
           expect(place).to receive_message_chain(:wk_api, :current).with(coords).and_return(wk_obj)
           expect(subject).to be true
