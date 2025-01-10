@@ -47,6 +47,10 @@ img.weather-icon { width 0.8em; height: 0.8em; cursor:pointer }
   text-align: center;
   font-size: 24pt;
 }
+#icons th {
+  background-color: lightgray;
+  padding: 2pt;
+}
 .select { border: 2px solid Blue; }
 .bypass { color: Gray; }
 .review { height: 60px; }

@@ -23,8 +23,7 @@
       <div class="weather-time">
          Weather data from <%= time_format @place.current_weather['dt'], @place.timezone %>
         <% unless @fresh_data %>
-          <br/>Next refresh at
-          <%= time_format (@place.updated_at + 30.minutes).to_i, @place.timezone %>
+          <br/>Next refresh at <%= time_format (@place.updated_at + 30.minutes).to_i, @place.timezone %>
         <% end %>
       </div>
     </div>
@@ -51,8 +50,7 @@
         <% @place.weather_forecast['daily'].each do |item| %>
           <tr class="forecast-item">
             <td><%= time_format item['dt'], @place.timezone, "%A" %></td>
-            <td><i class="<%= icon_css item['weather'].first['id'],
-                                       item['weather'].first['icon'] %>"></i></td>
+            <td><i class="wi wi-owm-<%= item['weather'].first['id'] %>"></i></td>
             <td class="forecast-temp"><%= temp_format item['main']['temp'], @place.country_code %></td>
           </tr>
         <% end %>

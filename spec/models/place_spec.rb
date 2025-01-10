@@ -2,17 +2,15 @@ require "rails_helper"
 
 RSpec.describe Place, type: :model do
   let(:place) { build(:place) }
-  let(:wk_cw) do
-    {"metadata" => {"longitude" => -120.18, "latitude" => 39.33},
-     "asOf" => "2024-12-28T11:06:03Z", "temperature" => 1.84,
-     "temperatureApparent" => -3.3, "conditionCode" => "Cloudy", "daylight" => false,
-     "pressure" => 1013.46, "humidity" => 0.88, "visibility" => 1662.17}
-  end
-  let(:wk_df) do
-    {"temperatureMin" => 1.32, "temperatureMax" => 6.38}
-  end
   let(:wk_obj) do
-    {"currentWeather" => wk_cw, "forecastDaily" => {"days" => [{"restOfDayForecast" => wk_df}]}}
+    {"currentWeather" => {
+      "metadata" => {"longitude" => -120.18, "latitude" => 39.33},
+      "asOf" => "2024-12-28T11:06:03Z", "temperature" => 1.84,
+      "temperatureApparent" => -3.3, "conditionCode" => "Cloudy", "daylight" => false,
+      "pressure" => 1013.46, "humidity" => 0.88, "visibility" => 1662.17
+    }, "forecastDaily" => {"days" => [
+      {"restOfDayForecast" => {"temperatureMin" => 1.32, "temperatureMax" => 6.38}}
+    ]}}
   end
 
   describe ".geo_create" do
@@ -67,8 +65,6 @@ RSpec.describe Place, type: :model do
     let(:current) { {coord: {lat: coords[:lat].to_s, lon: coords[:lon].to_s}} }
     let(:forecast) { {"list" => []} }
 
-    before { allow(place).to receive_message_chain(:ow_api, :forecast).and_return(forecast) }
-
     subject { place.refresh_weather }
 
     context "when weather data is fresh" do
@@ -82,7 +78,10 @@ RSpec.describe Place, type: :model do
       let(:updated_at) { DateTime.now.utc - 1.hour }
 
       context "when @use_wk_api is false" do
-        before { place.use_wk_api = false }
+        before do
+          place.use_wk_api = false
+          allow(place).to receive_message_chain(:ow_api, :forecast).and_return(forecast)
+        end
         it "should return true" do
           expect(place).to receive_message_chain(:ow_api, :current).with(coords).and_return(current)
           expect(subject).to be true
@@ -90,7 +89,10 @@ RSpec.describe Place, type: :model do
       end
 
       context "when @use_wk_api is true" do
-        before { place.use_wk_api = true }
+        before do
+          place.use_wk_api = true
+          allow(place).to receive_message_chain(:wk_api, :forecast).and_return(forecast)
+        end
         it "should return true" do
           expect(place).to receive_message_chain(:wk_api, :current).with(coords).and_return(wk_obj)
           expect(subject).to be true
@@ -119,17 +121,79 @@ RSpec.describe Place, type: :model do
     end
 
     it "returns Open Weather payload" do
-      expect(place.send(:legacy_weather, wk_cw, wk_df)).to match payload
+      expect(place.send(:legacy_weather, wk_obj)).to match payload
+    end
+  end
+
+  describe "#legacy_forecast" do
+    let(:temp) { 1.84 }
+    let(:min) { 1.32 }
+    let(:max) { 6.38 }
+    let(:feed) do
+      {"forecastStart" => "2024-12-28T11:06:03Z", "conditionCode" => "Cloudy",
+       "temperature" => temp, "temperatureMin" => min, "temperatureMax" => max}
+    end
+    let(:comp) do
+      {dt: 1735383963, main: {temp: 274.99, temp_max: 279.53, temp_min: 274.47},
+       weather: [{id: 801, description: "cloudy", icon: "02n", main: "Cloudy"}]}
+    end
+
+    context "with hourly feed missing min/max" do
+      let(:max) { nil }
+      let(:min) { nil }
+      let(:ex) { {temp_max: 6.38, temp_min: 1.32} }
+
+      it "returns composite payload" do
+        expect(place.send(:legacy_forecast, feed, ex)).to match(comp)
+      end
+    end
+
+    context "with daily feed missing temp" do
+      let(:temp) { nil }
+      let(:ex) { {temp: 1.84} }
+
+      it "returns composite payload" do
+        expect(place.send(:legacy_forecast, feed, ex)).to match(comp)
+      end
     end
   end
 
   describe "#arrange_forecast" do
-    let(:data) { {weather: :data} }
-    let(:feed) { {"list" => Array.new(40) { data }} }
-    let(:tidy) { {hourly: Array.new(5) { data }, daily: Array.new(5) { data }} }
+    context "with OW payload" do
+      let(:data) { {weather: :data} }
+      let(:tidy) { {hourly: Array.new(5) { data }, daily: Array.new(5) { data }} }
+      let(:feed) { {"list" => Array.new(40) { data }} }
 
-    it "sets hourly and daily data" do
-      expect(place.send(:arrange_forecast, feed)).to match(tidy)
+      it "sets hourly and daily data" do
+        expect(place.send(:arrange_forecast, feed)).to match(tidy)
+      end
+    end
+
+    context "with WK payload" do
+      let(:feed) { JSON.parse File.read("test/fixtures/forecast.json") }
+
+      it "sets hourly and daily data" do
+        resp = place.send(:arrange_forecast, feed)
+        expect(resp[:hourly].size).to be 5
+        expect(resp[:daily].size).to be 5
+      end
+    end
+  end
+
+  describe "#next_hour_at" do
+    let(:before) { DateTime.now - 5.hours }
+    let(:feed) { 10.times.map { |i| {"forecastStart" => (before + i.hours).to_s} } }
+
+    it "returns index to next hours data" do
+      expect(place.send(:next_hour_at, feed)).to be 6
+    end
+
+    context "when all entries are in the past" do
+      let(:before) { DateTime.now - 12.hours }
+
+      it "returns -1 to indicate bad data" do
+        expect(place.send(:next_hour_at, feed)).to be(-1)
+      end
     end
   end
 

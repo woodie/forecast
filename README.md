@@ -1,6 +1,8 @@
 # Weather Forecast
 Display the weather forecast for any location.
 
+**UPDATE:** The initial assignment is done but we're adding WeatherKit support for fun.
+
 We use [Geocoder API](geocoder-api.md) to convert an address to a place.
 
 We use [Open Weather API](open-weather-api.md) but can now also

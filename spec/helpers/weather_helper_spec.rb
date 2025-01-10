@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe WeatherHelper, type: :helper do
   describe "#icon_url" do
     let(:code) { "13d" }
-    let(:src) { "https://openweathermap.org/img/wn/13d@2x.png" }
+    let(:src) { "https://openweathermap.org/img/wn/#{code}@2x.png" }
     let(:tag) { "<img alt=\"icon\" title=\"icon\" class=\"\" src=\"#{src}\" />" }
     it "returns populated IMG tag" do
       expect(helper.icon_url(code)).to eq tag

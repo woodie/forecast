@@ -2,7 +2,24 @@
   <div id='main'>
     <div id="weather-forecast">
       <table>
+        <thead>
+          <tr id="icons">
+            <th>ID</th>
+            <th colspan="3">Weather Icons</th>
+            <th>WK Condition</th>
+            <th colspan="2">OWM Icons</th>
+          </tr>
+        </thead>
         <tbody>
+          <tr>
+            <th></th>
+            <th>Day</th>
+            <th>Night</th>
+            <th>Neutral</th>
+            <th></th>
+            <th>Day</th>
+            <th>Night</th>
+          </tr>
         <% Place::ICON_ID.each do |condition, code| %>
           <tr class="forecast-item">
             <% options = ['select', 'bypass'] %>
