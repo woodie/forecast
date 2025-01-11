@@ -16,8 +16,8 @@
       <div><%= @place.current_weather['weather'].first['description'].humanize %></div>
       <div>Feels Like: <%= temp_format @place.current_weather['main']['feels_like'], @place.country_code %></div>
       <div>
-        H: <%= temp_format @place.current_weather['main']['temp_max'], @place.country_code %> &nbsp;
-        L: <%= temp_format @place.current_weather['main']['temp_min'], @place.country_code %>
+        H: <%= temp_format @place.current_main['temp_max'], @place.country_code %> &nbsp;
+        L: <%= temp_format @place.current_main['temp_min'], @place.country_code %>
       </div>
       <div class="weather-time">
          Weather data from <%= time_format @place.current_weather['dt'], @place.timezone %>

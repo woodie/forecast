@@ -82,6 +82,8 @@ WeatherHelper
     with East Coast location
       returns formated string
   #temp_format
+    when passed nil
+      returns n/a
     with fahrenheit country
       returns formated string
     with celsius country
@@ -108,6 +110,11 @@ Place
         should return true
   #icon
     returns Open Weather icon
+  #current_main
+    when rest_of_day weather_forecast missing
+      returns related forecast data
+    when rest_of_day weather_forecast present
+      returns related forecast data
   #legacy_weather
     returns Open Weather payload
   #legacy_forecast

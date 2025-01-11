@@ -105,11 +105,31 @@ RSpec.describe Place, type: :model do
     end
   end
 
+  describe "#current_main" do
+    let(:current_weather) { {"main" => :current_data} }
+    before { allow(place).to receive(:current_weather).and_return(current_weather) }
+
+    context "when rest_of_day weather_forecast missing" do
+      let(:weather_forecast) { {"hourly" => [], "daily" => []} }
+      before { allow(place).to receive(:weather_forecast).and_return(weather_forecast) }
+      it "returns related forecast data" do
+        expect(place.current_main).to be :current_data
+      end
+    end
+
+    context "when rest_of_day weather_forecast present" do
+      let(:weather_forecast) { {"rest_of_day" => {"main" => :forecast_data}} }
+      before { allow(place).to receive(:weather_forecast).and_return(weather_forecast) }
+      it "returns related forecast data" do
+        expect(place.current_main).to be :forecast_data
+      end
+    end
+  end
+
   describe "#legacy_weather" do
     let(:payload) do
       {coord: {lat: 39.33, lon: -120.18}, dt: 1735383963,
-       main: {feels_like: 269.85, humidity: 0.88, pressure: 1013.46,
-              temp: 274.99, temp_max: 279.53, temp_min: 274.47, visibility: 1662.17},
+       main: {feels_like: 269.85, humidity: 0.88, pressure: 1013.46, temp: 274.99, visibility: 1662.17},
        weather: [{id: 801, description: "cloudy", icon: "02n", main: "Cloudy"}]}
     end
 

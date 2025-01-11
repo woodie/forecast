@@ -16,6 +16,7 @@ module WeatherHelper
 
   # Few countries are exclusively using Fahrenheit
   def temp_format(kelvin_temp, country_code = "us")
+    return 'n/a' if kelvin_temp.nil?
     if %w[us ky].include?(country_code.downcase)
       "#{to_fahrenheit(kelvin_temp).round}°F"
     else

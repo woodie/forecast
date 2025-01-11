@@ -8,7 +8,7 @@ end
 module Tenkit
   class Client
     def current(opt)
-      get("/weather/en/#{opt[:lat]}/#{opt[:lon]}?dataSets=currentWeather,forecastDaily")
+      get("/weather/en/#{opt[:lat]}/#{opt[:lon]}?dataSets=currentWeather")
     end
 
     def forecast(opt)

@@ -54,6 +54,12 @@ RSpec.describe WeatherHelper, type: :helper do
   end
 
   describe "#temp_format" do
+    context "when passed nil" do
+      it "returns n/a" do
+        expect(helper.temp_format(nil, 'us')).to eq "n/a"
+      end
+    end
+
     context "with fahrenheit country" do
       let(:country_code) { "us" }
       it "returns formated string" do

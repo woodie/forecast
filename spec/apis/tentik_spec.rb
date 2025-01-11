@@ -8,13 +8,12 @@ RSpec.describe "Tenkin::Client" do
   subject { Tenkit::Client.new }
 
   describe "#current" do
-    let(:path) { "/weather/en/#{lat}/#{lon}?dataSets=currentWeather,forecastDaily" }
+    let(:path) { "/weather/en/#{lat}/#{lon}?dataSets=currentWeather" }
     let(:feed) { JSON.parse File.read("test/fixtures/current.json") }
     it "contains expected keys" do
       expect(subject).to receive(:get).with(path).and_return(feed)
       resp = subject.current(coords)
       expect(resp["currentWeather"]).to be_present
-      expect(resp["forecastDaily"]).to be_present
     end
   end
 

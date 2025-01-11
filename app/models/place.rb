@@ -1,5 +1,4 @@
 class Place < ApplicationRecord
-
   NEUTRAL = [210, 310, 601, 602] + [771, 901, 905] # forced + no-d/n, see: /owm-codes.html & /icons
   ICON_ID = {Clear: 800, Cloudy: 801, Dust: 731, Fog: 741, Haze: 721, MostlyClear: 800,
              MostlyCloudy: 804, PartlyCloudy: 801, ScatteredThunderstorms: 200, Smoke: 711,
@@ -53,11 +52,18 @@ class Place < ApplicationRecord
     "#{num.to_s.rjust(2, "0")}#{daylight ? "d" : "n"}"
   end
 
+  def current_main
+    if weather_forecast.has_key?("rest_of_day")
+      weather_forecast["rest_of_day"]["main"]
+    else
+      current_weather["main"]
+    end
+  end
+
   private
 
   def legacy_weather(wd)
     cw = wd["currentWeather"]
-    df = wd["forecastDaily"]["days"].first["restOfDayForecast"]
     code = cw["conditionCode"]
     {coord: {lon: cw["metadata"]["longitude"], lat: cw["metadata"]["latitude"]},
      dt: DateTime.parse(cw["asOf"]).to_i, weather: [
@@ -65,7 +71,6 @@ class Place < ApplicationRecord
         description: code.underscore.humanize.downcase}
      ], main: {
        temp: m2k(cw["temperature"]), feels_like: m2k(cw["temperatureApparent"]),
-       temp_min: m2k(df["temperatureMin"]), temp_max: m2k(df["temperatureMax"]),
        pressure: cw["pressure"], humidity: cw["humidity"], visibility: cw["visibility"]
      }}
   end
@@ -98,6 +103,9 @@ class Place < ApplicationRecord
         ex = {temp: fhs[i * 24 + 24 + fhx]["temperature"]}
         legacy_forecast(wd, ex)
       end
+      wd = fds.first["restOfDayForecast"]
+      ex = {temp: fhs[[fhx - 1, 0].max]["temperature"]}
+      payload[:rest_of_day] = legacy_forecast(wd, ex)
     end
     payload
   end
