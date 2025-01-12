@@ -105,23 +105,29 @@ RSpec.describe Place, type: :model do
     end
   end
 
-  describe "#current_main" do
-    let(:current_weather) { {"main" => :current_data} }
+  describe "#composite_main" do
+    let(:current_weather) { {"main" => {"temp" => 279.48, "feels_like" => 279.45}} }
     before { allow(place).to receive(:current_weather).and_return(current_weather) }
 
     context "when rest_of_day weather_forecast missing" do
       let(:weather_forecast) { {"hourly" => [], "daily" => []} }
       before { allow(place).to receive(:weather_forecast).and_return(weather_forecast) }
-      it "returns related forecast data" do
-        expect(place.current_main).to be :current_data
+      it "returns main node from current weather" do
+        expect(place.composite_main).to match current_weather["main"]
       end
     end
 
     context "when rest_of_day weather_forecast present" do
-      let(:weather_forecast) { {"rest_of_day" => {"main" => :forecast_data}} }
+      let(:weather_forecast) do
+        {"rest_of_day" => {"main" => {"temp" => 278.62, "temp_min" => 277.76, "temp_max" => 280.94}}}
+      end
       before { allow(place).to receive(:weather_forecast).and_return(weather_forecast) }
-      it "returns related forecast data" do
-        expect(place.current_main).to be :forecast_data
+      it "returns composite main node with min and max" do
+        main = place.composite_main
+        expect(main["temp"]).to be 279.48
+        expect(main["temp_min"]).to be 277.76
+        expect(main["temp_max"]).to be 280.94
+        expect(main["feels_like"]).to be 279.45
       end
     end
   end

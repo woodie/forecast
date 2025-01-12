@@ -110,11 +110,11 @@ Place
         should return true
   #icon
     returns Open Weather icon
-  #current_main
+  #composite_main
     when rest_of_day weather_forecast missing
-      returns related forecast data
+      returns main node from current weather
     when rest_of_day weather_forecast present
-      returns related forecast data
+      returns composite main node with min and max
   #legacy_weather
     returns Open Weather payload
   #legacy_forecast

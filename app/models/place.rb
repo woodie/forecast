@@ -52,12 +52,9 @@ class Place < ApplicationRecord
     "#{num.to_s.rjust(2, "0")}#{daylight ? "d" : "n"}"
   end
 
-  def current_main
-    if weather_forecast.has_key?("rest_of_day")
-      weather_forecast["rest_of_day"]["main"]
-    else
-      current_weather["main"]
-    end
+  def composite_main
+    return current_weather["main"] unless weather_forecast.has_key?("rest_of_day")
+    weather_forecast["rest_of_day"]["main"].merge current_weather["main"]
   end
 
   private
