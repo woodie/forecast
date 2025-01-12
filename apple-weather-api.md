@@ -7,6 +7,9 @@ We will cache the forecast by zip (postal) code.
 ### TenKit library
 
 The TenKit library handles configuration and authentication but is incomplete.
+We decided to just patch in [our own methods](https://github.com/woodie/forecast/blob/main/config/initializers/apple-weather-api.rb#L10-L16) to address issues with the current TenKit API:
+- The `client.weather` method does not accept intended params.
+- The mapping from camel-case to snake-case is incomplete
 
 ### Timezone for a location
 
@@ -42,6 +45,10 @@ Or create our own mapping from WeatherKit to a library like
 [this](https://erikflowers.github.io/weather-icons/api-list.html).
 
 ![icons](https://camo.githubusercontent.com/685bc5c7307ae21265819ba60ad1bf5cee72f74534696c926414db7e6a62e3b6/687474703a2f2f692e696d6775722e636f6d2f586d5a573271332e706e67)
+
+We created a couple pages to help map WK weather conditions:
+- /owm-codes.html - displays WI OWM codes avaiblae from WI CSS
+- /icons - displays how WI CSS and OW PNG map to WK weather conditions
 
 ### Sample data
 

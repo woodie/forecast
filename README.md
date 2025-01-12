@@ -1,14 +1,14 @@
 # Weather Forecast
 Display the weather forecast for any location.
 
-**UPDATE:** The initial assignment is done but we're adding WeatherKit support for fun.
+Once the initial implementation was completed we added WeatherKit support for fun.
 
 We use [Geocoder API](geocoder-api.md) to convert an address to a place.
 
-We use [Open Weather API](open-weather-api.md) but can now also
-use [Apple WeatherKit API](apple-weather-api.md).
+We use both [Open Weather API](open-weather-api.md)
+and [Apple WeatherKit API](apple-weather-api.md) APIs.
 
-- Open Weather (free) forcast only provides a snapshot every three hours.
+- Open Weather (free) forecast only provides a snapshot every three hours.
 - Apple WeatherKit hourly provides temperature and daily provides min/max.
   This is opposite from what the initial implementation renders.
 

@@ -1,4 +1,6 @@
 class Place < ApplicationRecord
+  has_many :addresses
+
   NEUTRAL = [210, 310, 601, 602] + [771, 901, 905] # forced + no-d/n, see: /owm-codes.html & /icons
   ICON_ID = {Clear: 800, Cloudy: 801, Dust: 731, Fog: 741, Haze: 721, MostlyClear: 800,
              MostlyCloudy: 804, PartlyCloudy: 801, ScatteredThunderstorms: 200, Smoke: 711,
