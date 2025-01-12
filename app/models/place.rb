@@ -16,7 +16,7 @@ class Place < ApplicationRecord
              ShowerRain: 9, Rain: 10, Thunderstorm: 11, Snow: 13, Mist: 50}
   OW_ICON = {200 => 11, 210 => 11, 310 => 9, 500 => 10, 511 => 13, 520 => 9,
              600 => 13, 601 => 13, 602 => 10, 611 => 9, 800 => 1, 801 => 2,
-             802 => 3, 804 => 4, 903 => 13, 904 => 1, 906 => 10} # default 50
+             802 => 3, 803 => 4, 903 => 13, 904 => 1, 906 => 10} # default 50
 
   def self.geo_create(geo)
     find_or_create_by(postal_code: geo.postal_code, country_code: geo.country_code) do |place|
