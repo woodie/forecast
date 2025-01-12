@@ -94,6 +94,8 @@ WeatherHelper
     returns converted float
 
 Place
+  OW_ICON constant
+    values map to all known text values
   .geo_create
     uses result attributes
     when state missing

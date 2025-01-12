@@ -2,8 +2,8 @@ class Place < ApplicationRecord
   has_many :addresses
 
   NEUTRAL = [210, 310, 601, 602] + [771, 901, 905] # forced + no-d/n, see: /owm-codes.html & /icons
-  ICON_ID = {Clear: 800, Cloudy: 801, Dust: 731, Fog: 741, Haze: 721, MostlyClear: 800,
-             MostlyCloudy: 804, PartlyCloudy: 801, ScatteredThunderstorms: 200, Smoke: 711,
+  ICON_ID = {Clear: 800, Cloudy: 802, Dust: 731, Fog: 741, Haze: 721, MostlyClear: 800,
+             MostlyCloudy: 803, PartlyCloudy: 801, ScatteredThunderstorms: 200, Smoke: 711,
              Breezy: 771, Windy: 957, Drizzle: 500, HeavyRain: 310, Rain: 520, Showers: 520,
              Flurries: 600, HeavySnow: 601, MixedRainAndSleet: 310, MixedRainAndSnow: 611,
              MixedRainfall: 310, MixedSnowAndSleet: 611, ScatteredShowers: 520,
@@ -16,7 +16,7 @@ class Place < ApplicationRecord
              ShowerRain: 9, Rain: 10, Thunderstorm: 11, Snow: 13, Mist: 50}
   OW_ICON = {200 => 11, 210 => 11, 310 => 9, 500 => 10, 511 => 13, 520 => 9,
              600 => 13, 601 => 13, 602 => 10, 611 => 9, 800 => 1, 801 => 2,
-             804 => 3, 903 => 13, 904 => 1, 906 => 10} # default 50
+             802 => 3, 804 => 4, 903 => 13, 904 => 1, 906 => 10} # default 50
 
   def self.geo_create(geo)
     find_or_create_by(postal_code: geo.postal_code, country_code: geo.country_code) do |place|

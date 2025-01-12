@@ -13,6 +13,12 @@ RSpec.describe Place, type: :model do
     ]}}
   end
 
+  describe "OW_ICON constant" do
+    it "values map to all known text values" do
+      expect(Place::OW_ICON.values.uniq.sort << 50).to match Place::OW_TEXT.values
+    end
+  end
+
   describe ".geo_create" do
     let(:state) { "State" }
     let(:district) { "District" }
@@ -136,7 +142,7 @@ RSpec.describe Place, type: :model do
     let(:payload) do
       {coord: {lat: 39.33, lon: -120.18}, dt: 1735383963,
        main: {feels_like: 269.85, humidity: 0.88, pressure: 1013.46, temp: 274.99, visibility: 1662.17},
-       weather: [{id: 801, description: "cloudy", icon: "02n", main: "Cloudy"}]}
+       weather: [{id: 802, description: "cloudy", icon: "03n", main: "Cloudy"}]}
     end
 
     it "returns Open Weather payload" do
@@ -154,7 +160,7 @@ RSpec.describe Place, type: :model do
     end
     let(:comp) do
       {dt: 1735383963, main: {temp: 274.99, temp_max: 279.53, temp_min: 274.47},
-       weather: [{id: 801, description: "cloudy", icon: "02n", main: "Cloudy"}]}
+       weather: [{id: 802, description: "cloudy", icon: "03n", main: "Cloudy"}]}
     end
 
     context "with hourly feed missing min/max" do
