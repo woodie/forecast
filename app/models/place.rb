@@ -92,7 +92,8 @@ class Place < ApplicationRecord
     elsif feed["forecastHourly"].present? && feed["forecastDaily"].present?
       fhs = feed["forecastHourly"]["hours"]
       fds = feed["forecastDaily"]["days"]
-      fhx = next_hour_at(fhs)
+      dtn = DateTime.parse(fds.first["restOfDayForecast"]["forecastStart"]).to_i
+      fhx = next_hour_at(fhs, dtn)
       fdo = [fds.first, fds.first, fds.first, fds.first["daytimeForecast"], fds.first["restOfDayForecast"]]
       payload[:hourly] = fhs.values_at(fhx + 2, fhx + 5, fhx + 8, fhx + 11, fhx + 14).map.with_index do |wd, i|
         ex = {temp_min: fdo[i]["temperatureMin"], temp_max: fdo[i]["temperatureMax"]}
@@ -109,11 +110,10 @@ class Place < ApplicationRecord
     payload
   end
 
-  def next_hour_at(feed_hours)
-    now = Time.now.to_i
+  def next_hour_at(feed_hours, dt_now = DateTime.now.to_i)
     feed_hours.each_with_index do |w, i|
       asof = DateTime.parse(w["forecastStart"]).to_i
-      return i if asof > now
+      return i if asof > dt_now
     end
     -1
   end
