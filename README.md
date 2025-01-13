@@ -16,14 +16,14 @@ Set `:use_wk_api` fo false in `config/feature.yml` to use the OpenWeather API.
 
 ### Setup and configuration
 
-Request some credentials.
-- [Open Weather API key](https://home.openweathermap.org/api_keys)
-- [Several IDs and a PKEY](https://github.com/superbasicxyz/tenkit)
+Request credentials for
+[Open Weather API key](https://home.openweathermap.org/api_keys) and/or
+[Several IDs and a PKEY](https://github.com/superbasicxyz/tenkit).
+
+Once populated, your `.env` file should look something like this.
 
 ```sh
-cat.env
 OPENWEATHER_API_KEY=0123456789abcdef0123456789abcdef
-
 APPLE_DEVELOPER_TEAM_ID=A1A1A1A1A1
 APPLE_DEVELOPER_SERVICE_ID=com.mydomain.myapp
 APPLE_DEVELOPER_KEY_ID=B2B2B2B2B2
