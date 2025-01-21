@@ -34,7 +34,7 @@ Time.at(dt).in_time_zone('America/Los_Angeles').strftime("%-l:%M%P") => "7:20pm"
 ```
 Now that we're doing this extra work to get the timezone,
 we can use that instead of offset which will be more accurate
-when displaying hourly forcast while coming in and out of DST.
+when displaying hourly forecast while coming in and out of DST.
 
 ### Weather icons
 
@@ -47,7 +47,7 @@ Or create our own mapping from WeatherKit to a library like
 ![icons](https://camo.githubusercontent.com/685bc5c7307ae21265819ba60ad1bf5cee72f74534696c926414db7e6a62e3b6/687474703a2f2f692e696d6775722e636f6d2f586d5a573271332e706e67)
 
 We created a couple pages to help map WK weather conditions:
-- /owm-codes.html - displays WI OWM codes avaiblae from WI CSS
+- /owm-codes.html - displays WI OWM codes available from WI CSS
 - /icons - displays how WI CSS and OW PNG map to WK weather conditions
 
 ### Sample data

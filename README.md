@@ -5,12 +5,11 @@ Once the initial implementation was completed we added WeatherKit support for fu
 
 We use [Geocoder API](geocoder-api.md) to convert an address to a place.
 
-We use both [Open Weather API](open-weather-api.md)
-and [Apple WeatherKit API](apple-weather-api.md) APIs.
+We can use either [Open Weather API](open-weather-api.md)
+or [Apple WeatherKit API](apple-weather-api.md) API for weather data.
 
 - Open Weather (free) forecast only provides a snapshot every three hours.
 - Apple WeatherKit hourly provides temperature and daily provides min/max.
-  This is opposite from what the initial implementation renders.
 
 Set `:use_wk_api` fo false in `config/feature.yml` to use the OpenWeather API.
 
@@ -18,11 +17,11 @@ Set `:use_wk_api` fo false in `config/feature.yml` to use the OpenWeather API.
 
 Request credentials for
 [Open Weather API key](https://home.openweathermap.org/api_keys) and/or
-[Several IDs and a PKEY](https://github.com/superbasicxyz/tenkit).
+[Several IDs and a PKEY](https://github.com/superbasicxyz/tenkit/blob/main/README.md#credentials).
 
 Once populated, your `.env` file should look something like this.
 
-```sh
+```
 OPENWEATHER_API_KEY=0123456789abcdef0123456789abcdef
 APPLE_DEVELOPER_TEAM_ID=A1A1A1A1A1
 APPLE_DEVELOPER_SERVICE_ID=com.mydomain.myapp

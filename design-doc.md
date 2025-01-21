@@ -15,13 +15,13 @@ Will use postal and country codes as the identifier to avoid "zip code" collisio
 
 ### Implementation
 
-Will use the most current version of Rails with Geocoder and OpenWeatherApi rubygems.
-- Will work with any address the geocoder can process,
-  which resolves "123 123" to "Desamparados, Alajuela Province, Costa Rica"
+Will use the most current version of Rails with Geocoder and OpenWeatherApi or WeatherKit rubygems.
+- Will work with any address the geocoder can process
+  (which resolves "123 123" to "Desamparados, Alajuela Province, Costa Rica")
 - The Weather controller will process the transactions
 - Handle exception when Geocoder returns a null place
 - Fetch `current_weather` and `weather_forecast` in Place model
-- Handle when exception when APIs fail
+- Handle the exception when APIs fail
 - Cache each weather objects for 30 minutes and provide indicator
 - Use feature gem to flip befween weather APIs
 
@@ -38,8 +38,6 @@ Highlight temperature as it was the core element requested.
 
 Things to consider in the future:
 - Provide a way to flip between °F/°C in JS
-
-We will use [better icons](https://github.com/hasankoroglu/OpenWeatherMap-Icons).
 
 ### Example UI
 
@@ -101,6 +99,7 @@ which could lead to a better understanding of the data.
 
 The Geocoder requires that we credit OpenStreetMap and contributors.
 - Data © OpenStreetMap(http://osm.org/copyright) contributors, ODbL 1.0
+We will also include the attribution for the accociated weather API.
 
 ### Other Resources
 

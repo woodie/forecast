@@ -16,7 +16,7 @@ that use NOAA data.
 
 OpenWeatherAPI is free and has what we need.
 
-UPDATE: Migrating to Apple WeatherKit just for gun.
+UPDATE: Migrating to Apple WeatherKit just for fun.
 
 ### Address geocoding
 
