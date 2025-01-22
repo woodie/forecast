@@ -34,14 +34,14 @@ class Place < ApplicationRecord
       current_weather.present? && weather_forecast.present?
 
     weather_data = if Feature.active?(:use_wk_api)
-      legacy_weather wk_api.current(lat: lat, lon: lon)
+      legacy_weather wk_api.weather(lat, lon, data_sets: [:current_weather]).raw
     else
       ow_api.current(lat: lat, lon: lon)
     end
     update(current_weather: weather_data)
 
     forecast_data = if Feature.active?(:use_wk_api)
-      arrange_forecast wk_api.forecast(lat: lat, lon: lon)
+      arrange_forecast wk_api.weather(lat, lon, data_sets: [:forecast_hourly, :forecast_daily]).raw
     else
       arrange_forecast ow_api.forecast(lat: lat, lon: lon)
     end

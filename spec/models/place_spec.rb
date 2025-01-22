@@ -90,10 +90,9 @@ RSpec.describe Place, type: :model do
 
       context "when :use_wk_api is true" do
         let(:features) { [:use_wk_api] }
-        before { allow(place).to receive_message_chain(:wk_api, :forecast).and_return(forecast) }
+        before { allow(place).to receive_message_chain(:wk_api, :weather, :raw).and_return(wk_obj) }
 
         it "should return true" do
-          expect(place).to receive_message_chain(:wk_api, :current).with(coords).and_return(wk_obj)
           expect(subject).to be true
         end
       end

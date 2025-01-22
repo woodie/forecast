@@ -59,12 +59,6 @@ Feature
     when deactivated
       reports false
 
-Tenkin::Client
-  #current
-    contains expected keys
-  #forecast
-    contains expected keys
-
 WeatherHelper
   #icon_tag
     returns populated IMG tag

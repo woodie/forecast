@@ -4,15 +4,3 @@ Tenkit.configure do |c|
   c.key_id = ENV["APPLE_DEVELOPER_KEY_ID"]
   c.key = ENV["APPLE_DEVELOPER_PRIVATE_KEY"]
 end
-
-module Tenkit
-  class Client
-    def current(opt)
-      get("/weather/en/#{opt[:lat]}/#{opt[:lon]}?dataSets=currentWeather")
-    end
-
-    def forecast(opt)
-      get("/weather/en/#{opt[:lat]}/#{opt[:lon]}?dataSets=forecastHourly,forecastDaily")
-    end
-  end
-end
