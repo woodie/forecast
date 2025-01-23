@@ -8,8 +8,8 @@ We will cache the forecast by zip (postal) code.
 
 The TenKit library handles configuration and authentication but is incomplete.
 We decided to just patch in [our own methods](https://github.com/woodie/forecast/blob/main/config/initializers/apple-weather-api.rb#L10-L16) to address issues with the current TenKit API:
-- The `client.weather` method does not accept intended params.
 - The mapping from camel-case to snake-case is incomplete
+- The `raw` node must be used to access all attributes
 
 ### Timezone for a location
 

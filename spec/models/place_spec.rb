@@ -84,6 +84,7 @@ RSpec.describe Place, type: :model do
 
         it "should return true" do
           expect(place).to receive_message_chain(:ow_api, :current).with(coords).and_return(current)
+          expect(place).to receive(:arrange_forecast)
           expect(subject).to be true
         end
       end
@@ -93,6 +94,8 @@ RSpec.describe Place, type: :model do
         before { allow(place).to receive_message_chain(:wk_api, :weather, :raw).and_return(wk_obj) }
 
         it "should return true" do
+          expect(place).to receive(:legacy_weather).with(wk_obj)
+          expect(place).to receive(:arrange_forecast).with(wk_obj)
           expect(subject).to be true
         end
       end
