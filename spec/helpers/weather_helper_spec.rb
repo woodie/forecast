@@ -5,8 +5,45 @@ RSpec.describe WeatherHelper, type: :helper do
     let(:code) { "13d" }
     let(:src) { "https://openweathermap.org/img/wn/#{code}@2x.png" }
     let(:tag) { "<img alt=\"icon\" title=\"icon\" class=\"\" src=\"#{src}\" />" }
+
     it "returns populated IMG tag" do
       expect(helper.icon_tag(code)).to eq tag
+    end
+  end
+
+  describe "#icon_svg" do
+    let(:neutral) { false }
+    let(:opt) { {"main" => "Fog", "icon" => icon} }
+    let(:src) { "#{WeatherImage::PATH}/#{image}.svg" }
+    let(:tag) { "<img class=\"weather-image\" src=\"#{src}\" />" }
+
+    subject { helper.icon_svg(opt, neutral) }
+
+    context "with a day icon" do
+      let(:icon) { "01d" }
+      let(:image) { "fog-day" }
+
+      it "returns day image" do
+        expect(subject).to eq tag
+      end
+
+      context "when forced neutral" do
+        let(:neutral) { true }
+        let(:image) { "fog" }
+
+        it "returns neutral image" do
+          expect(subject).to eq tag
+        end
+      end
+    end
+
+    context "with a night icon" do
+      let(:icon) { "01n" }
+      let(:image) { "fog-night" }
+
+      it "returns night image" do
+        expect(subject).to eq tag
+      end
     end
   end
 
