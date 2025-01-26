@@ -69,6 +69,8 @@ WeatherHelper
       returns wi night class
       with neutral-only id
         returns wi neutral class
+      with neutral is forced
+        returns wi neutral class
   #time_format
     with West Coast location
       returns formated string
@@ -87,8 +89,6 @@ WeatherHelper
     returns converted float
 
 Place
-  OW_ICON constant
-    values map to all known text values
   .geo_create
     uses result attributes
     when state missing
@@ -103,8 +103,6 @@ Place
         should return true
       when :use_wk_api is true
         should return true
-  #icon
-    returns Open Weather icon
   #composite_main
     when rest_of_day weather_forecast missing
       returns main node from current weather
@@ -132,6 +130,23 @@ Place
     provides Open Weather api
   #wk_api
     provides Apple WeatherKit api
+
+WeatherIcon
+  OW_ICON constant
+    values map to all known text values
+  #icon
+    returns Open Weather icon
+
+WeatherImage
+  MAP constant
+    values map to all known text values
+  #image
+    when is_day is nil
+      returns neutral label
+    when is_day is true
+      returns day label
+    when is_day is false
+      returns night label
 
 Weather
   GET /

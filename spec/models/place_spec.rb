@@ -13,12 +13,6 @@ RSpec.describe Place, type: :model do
     ]}}
   end
 
-  describe "OW_ICON constant" do
-    it "values map to all known text values" do
-      expect(Place::OW_ICON.values.uniq.sort << 50).to match Place::OW_TEXT.values
-    end
-  end
-
   describe ".geo_create" do
     let(:state) { "State" }
     let(:district) { "District" }
@@ -99,17 +93,6 @@ RSpec.describe Place, type: :model do
           expect(subject).to be true
         end
       end
-    end
-  end
-
-  describe "#icon" do
-    it "returns Open Weather icon" do
-      expect(place.icon("Clear")).to eq "01d"
-      expect(place.icon("Clear", false)).to eq "01n"
-      expect(place.icon("Snow")).to eq "13d"
-      expect(place.icon("Snow", false)).to eq "13n"
-      expect(place.icon("Dust")).to eq "50d"
-      expect(place.icon("Dust", false)).to eq "50n"
     end
   end
 

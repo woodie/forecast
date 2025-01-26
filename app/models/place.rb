@@ -1,23 +1,6 @@
 class Place < ApplicationRecord
   has_many :addresses
 
-  NEUTRAL = [210, 310, 601, 602] + [771, 901, 905] # forced + no-d/n, see: /owm-codes.html & /icons
-  ICON_ID = {Clear: 800, Cloudy: 802, Dust: 731, Fog: 741, Haze: 721, MostlyClear: 800,
-             MostlyCloudy: 803, PartlyCloudy: 801, ScatteredThunderstorms: 200, Smoke: 711,
-             Breezy: 771, Windy: 957, Drizzle: 500, HeavyRain: 310, Rain: 520, Showers: 520,
-             Flurries: 600, HeavySnow: 601, MixedRainAndSleet: 310, MixedRainAndSnow: 611,
-             MixedRainfall: 310, MixedSnowAndSleet: 611, ScatteredShowers: 520,
-             ScatteredSnowShowers: 511, Sleet: 611, Snow: 600, SnowShowers: 601,
-             Blizzard: 601, BlowingSnow: 601, FreezingDrizzle: 602, FreezingRain: 602,
-             Frigid: 903, Hail: 906, Hot: 904, Hurricane: 902, IsolatedThunderstorms: 200,
-             SevereThunderstorm: 210, Thunderstorm: 200, Tornado: 781, TropicalStorm: 200}
-  # https://openweathermap.org/weather-conditions
-  OW_TEXT = {ClearSky: 1, FewClouds: 2, ScatteredClouds: 3, BrokenClouds: 4,
-             ShowerRain: 9, Rain: 10, Thunderstorm: 11, Snow: 13, Mist: 50}
-  OW_ICON = {200 => 11, 210 => 11, 310 => 9, 500 => 10, 511 => 13, 520 => 9,
-             600 => 13, 601 => 13, 602 => 10, 611 => 9, 800 => 1, 801 => 2,
-             802 => 3, 803 => 4, 903 => 13, 904 => 1, 906 => 10} # default 50
-
   def self.geo_create(geo)
     find_or_create_by(postal_code: geo.postal_code, country_code: geo.country_code) do |place|
       place.city = geo.city
@@ -49,11 +32,6 @@ class Place < ApplicationRecord
     true
   end
 
-  def icon(code, daylight = true)
-    num = OW_ICON[number(code)] || 50
-    "#{num.to_s.rjust(2, "0")}#{daylight ? "d" : "n"}"
-  end
-
   def composite_main
     return current_weather["main"] unless weather_forecast.has_key?("rest_of_day")
     weather_forecast["rest_of_day"]["main"].merge current_weather["main"]
@@ -66,7 +44,8 @@ class Place < ApplicationRecord
     code = cw["conditionCode"]
     {coord: {lon: cw["metadata"]["longitude"], lat: cw["metadata"]["latitude"]},
      dt: DateTime.parse(cw["asOf"]).to_i, weather: [
-       {id: number(code), main: code, icon: icon(code, cw["daylight"]),
+       {id: WeatherIcon.number(code), main: code,
+        icon: WeatherIcon.icon(code, cw["daylight"]),
         description: code.underscore.humanize.downcase}
      ], main: {
        temp: m2k(cw["temperature"]), feels_like: m2k(cw["temperatureApparent"]),
@@ -77,7 +56,8 @@ class Place < ApplicationRecord
   def legacy_forecast(wd, ex)
     code = wd["conditionCode"]
     {dt: DateTime.parse(wd["forecastStart"]).to_i, weather: [
-      {id: number(code), main: code, icon: icon(code, wd["daylight"]),
+      {id: WeatherIcon.number(code), main: code,
+       icon: WeatherIcon.icon(code, wd["daylight"]),
        description: code.underscore.humanize.downcase}
     ], main: {temp: m2k(wd["temperature"] || ex[:temp]),
               temp_min: m2k(wd["temperatureMin"] || ex[:temp_min]),
@@ -116,10 +96,6 @@ class Place < ApplicationRecord
       return i if asof > dt_now
     end
     -1
-  end
-
-  def number(code)
-    ICON_ID[code.to_sym]
   end
 
   def m2k(m)

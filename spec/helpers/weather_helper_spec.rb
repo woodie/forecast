@@ -12,7 +12,7 @@ RSpec.describe WeatherHelper, type: :helper do
 
   describe "#icon_css" do
     let(:id) { 800 }
-    let(:opt) { {'id' => id, 'icon' => icon} }
+    let(:opt) { {"id" => id, "icon" => icon} }
 
     context "with a day icon" do
       let(:icon) { "01d" }
@@ -31,6 +31,12 @@ RSpec.describe WeatherHelper, type: :helper do
         let(:id) { 602 }
         it "returns wi neutral class" do
           expect(helper.icon_css(opt)).to eq "wi wi-owm-602"
+        end
+      end
+
+      context "with neutral is forced" do
+        it "returns wi neutral class" do
+          expect(helper.icon_css(opt, true)).to eq "wi wi-owm-800"
         end
       end
     end
@@ -56,7 +62,7 @@ RSpec.describe WeatherHelper, type: :helper do
   describe "#temp_format" do
     context "when passed nil" do
       it "returns n/a" do
-        expect(helper.temp_format(nil, 'us')).to eq "n/a"
+        expect(helper.temp_format(nil, "us")).to eq "n/a"
       end
     end
 

@@ -11,6 +11,7 @@
     <div id="current-weather">
       <div class="weather-main">
         <i class="<%= icon_css @place.current_weather['weather'].first %>"></i>
+        <%# icon_svg @place.current_weather['weather'].first %>
         <%= temp_format @place.current_weather['main']['temp'], @place.country_code %>
       </div>
       <div><%= @place.current_weather['weather'].first['description'].humanize %></div>
@@ -46,7 +47,7 @@
         <% @place.weather_forecast['daily'].each do |item| %>
           <tr class="forecast-item">
             <td><%= time_format item['dt'], @place.timezone, "%a" %></td>
-            <td class="icon"><i class="wi wi-owm-<%= item['weather'].first['id'] %>"></i></td>
+            <td class="icon"><i class="<%= icon_css item['weather'].first, true %>"></i></td>
             <td calss="forecast-temp">
               <%= temp_format item['main']['temp_min'], @place.country_code %> &ndash;
               <%= temp_format item['main']['temp_max'], @place.country_code %>
