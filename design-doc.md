@@ -37,7 +37,9 @@ Highlight temperature as it was the core element requested.
 - Display in localtime for current and forecast data.
 
 Things to consider in the future:
+- Background job to refreshweather
 - Provide a way to flip between °F/°C in JS
+- Host on GCR: https://cloud.google.com/ruby/rails/run
 
 ### Example UI
 

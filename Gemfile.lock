@@ -1,3 +1,11 @@
+GIT
+  remote: git@github.com:superbasicxyz/tenkit.git
+  revision: b38c900969272cefd677503a4e21765df97d8cc0
+  specs:
+    tenkit (0.0.7)
+      httparty (~> 0.21.0)
+      jwt (~> 2.7.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -353,9 +361,6 @@ GEM
     stringio (3.1.2)
     strong_migrations (2.1.0)
       activerecord (>= 6.1)
-    tenkit (0.0.5)
-      httparty (~> 0.21.0)
-      jwt (~> 2.7.0)
     thor (1.3.2)
     thruster (0.1.9-aarch64-linux)
     thruster (0.1.9-arm64-darwin)
@@ -415,7 +420,7 @@ DEPENDENCIES
   sqlite3 (>= 2.1)
   stimulus-rails
   strong_migrations
-  tenkit
+  tenkit!
   thruster
   timezone
   timezone_finder
