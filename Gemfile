@@ -43,7 +43,8 @@ gem "thruster", require: false
 gem 'timezone'
 gem 'timezone_finder'
 gem "geocoder"
-gem 'tenkit'
+gem 'tenkit', :git => 'git@github.com:superbasicxyz/tenkit.git'
+
 gem "open-weather-api"
 gem "heat-index"
 gem "pry"

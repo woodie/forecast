@@ -3,27 +3,26 @@ require "rails_helper"
 RSpec.describe Place, type: :model do
   let(:place) { build(:place) }
   let(:wk_obj) do
-    {"currentWeather" => {
-      "metadata" => {"longitude" => -120.18, "latitude" => 39.33},
-      "asOf" => "2024-12-28T11:06:03Z", "temperature" => 1.84,
-      "temperatureApparent" => -3.3, "conditionCode" => "Cloudy", "daylight" => false,
-      "pressure" => 1013.46, "humidity" => 0.88, "visibility" => 1662.17
-    }, "forecastDaily" => {"days" => [
-      {"restOfDayForecast" => {"temperatureMin" => 1.32, "temperatureMax" => 6.38}}
-    ]}}
+    double("Weather",
+      {current_weather: double("currentWeather", {
+        metadata: double("metadata", {longitude: -120.18, latitude: 39.33}),
+        as_of: "2024-12-28T11:06:03Z", temperature: 1.84,
+        temperature_apparent: -3.3, condition_code: "Cloudy", daylight: false,
+        pressure: 1013.46, humidity: 0.88, visibility: 1662.17
+      })})
   end
 
   describe ".geo_create" do
     let(:state) { "State" }
     let(:district) { "District" }
     let(:province) { "Province" }
-    let(:geo) {
+    let(:geo) do
       double("GeocoderResult",
         data: {"address" => {"district" => district, "province" => province}},
         city: "Truckee", state: state, postal_code: "96161",
         country: "United States", country_code: "us",
         latitude: "40.1234", longitude: "-120.1234")
-    }
+    end
 
     subject { Place.geo_create(geo) }
 
@@ -85,7 +84,7 @@ RSpec.describe Place, type: :model do
 
       context "when :use_wk_api is true" do
         let(:features) { [:use_wk_api] }
-        before { allow(place).to receive_message_chain(:wk_api, :weather, :raw).and_return(wk_obj) }
+        before { allow(place).to receive_message_chain(:wk_api, :weather, :weather).and_return(wk_obj) }
 
         it "should return true" do
           expect(place).to receive(:legacy_weather).with(wk_obj)
@@ -140,8 +139,8 @@ RSpec.describe Place, type: :model do
     let(:min) { 1.32 }
     let(:max) { 6.38 }
     let(:feed) do
-      {"forecastStart" => "2024-12-28T11:06:03Z", "conditionCode" => "Cloudy",
-       "temperature" => temp, "temperatureMin" => min, "temperatureMax" => max}
+      double("Feed", {forecast_start: "2024-12-28T11:06:03Z", condition_code: "Cloudy",
+                      daylight: false, temperature: temp, temperature_min: min, temperature_max: max}.compact)
     end
     let(:comp) do
       {dt: 1735383963, main: {temp: 274.99, temp_max: 279.53, temp_min: 274.47},
@@ -180,7 +179,7 @@ RSpec.describe Place, type: :model do
     end
 
     context "with WK payload" do
-      let(:feed) { JSON.parse File.read("test/fixtures/forecast.json") }
+      let(:feed) { Tenkit::Container.new JSON.parse File.read("test/fixtures/forecast.json") }
 
       it "sets hourly and daily data" do
         resp = place.send(:arrange_forecast, feed)
@@ -192,7 +191,7 @@ RSpec.describe Place, type: :model do
 
   describe "#next_hour_at" do
     let(:before) { DateTime.now - 5.hours }
-    let(:feed) { 10.times.map { |i| {"forecastStart" => (before + i.hours).to_s} } }
+    let(:feed) { 10.times.map { |i| double("Feed", {forecast_start: (before + i.hours).to_s}) } }
 
     it "returns index to next hours data" do
       expect(place.send(:next_hour_at, feed)).to be 6
