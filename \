@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+special = ['.',',','!']
+test = "sihT si ym ecnats, tub s'ti ton a doog eno!"
+str = "This is my stance, but it's not a good one!"
+
+out = []
+str.split(' ').each do |word|
+  punct = special.include?(word[-1]) ? word[-1] : nil
+  out << punct.nil? ? word.reverse! : word[..-2].reverse! + punct
+end
+
+output = out.join(' ')
+puts test == output
+
+__END__
+
+
+# Given a sentence in string datatype form, reverse each individual word without reversing the sentence itself.
+# Example Input: "This is my stance, but it's not a good one."
+#                "sihT si ym ecnats, tub s'ti ton a doog eno."

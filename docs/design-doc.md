@@ -16,7 +16,7 @@ Will use postal and country codes as the identifier to avoid "zip code" collisio
 ### Implementation
 
 Will use the most current version of Rails with Geocoder and OpenWeatherApi or WeatherKit rubygems.
-- Will work with any address the geocoder can process
+- Will work with any address the geocoder can process<br>
   (which resolves "123 123" to "Desamparados, Alajuela Province, Costa Rica")
 - The Weather controller will process the transactions
 - Handle exception when Geocoder returns a null place
